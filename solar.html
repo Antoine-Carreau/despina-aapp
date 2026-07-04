@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Système solaire — Despina</title>
+<meta name="theme-color" content="#0a0e1a">
+<link rel="icon" href="./assets/img/icon.svg">
+<link rel="manifest" href="./manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/css/base.css">
+<script src="./assets/js/i18n.js"></script>
+<script src="./assets/js/theme.js"></script>
+<style>
+  .solar-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:1.2rem; align-items:start; }
+  @media (max-width:880px){ .solar-grid { grid-template-columns:1fr; } }
+  .map-svg svg { width:100%; height:auto; display:block; }
+  .pl:focus-visible circle { stroke:var(--accent-2); stroke-width:2; }
+  #detail-wrap { position:sticky; top:76px; } @media (max-width:880px){ #detail-wrap { position:static; } }
+  .d-head { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; }
+  .d-empty { text-align:center; padding:2rem 0; } .d-empty .big { font-size:1.6rem; }
+  .d-visual { display:flex; align-items:center; gap:1rem; justify-content:center; margin:.4rem 0 1rem; flex-wrap:wrap; }
+  .d-ang { display:flex; flex-direction:column; } .d-ang .big { font-size:1.9rem; color:var(--accent); }
+  .datatable { margin:.6rem 0; }
+  .d-nav { display:flex; justify-content:space-between; gap:.6rem; margin-top:1rem; }
+  .moons { position:relative; height:46px; margin:.2rem 0; }
+  .moons-planet { position:absolute; left:92px; top:50%; width:16px; height:16px; border-radius:50%; transform:translate(-50%,-50%); }
+  .moon-dot { position:absolute; top:50%; transform:translate(-50%,-50%); width:11px; height:11px; padding:0; border-radius:50%;
+    border:1px solid var(--line); background:var(--muted); cursor:pointer; }
+  .moon-dot:hover,.moon-dot:focus-visible { background:var(--accent); }
+</style>
+</head>
+<body>
+<a href="#main" class="skip" data-i18n="nav.home">Accueil</a>
+<header class="topbar">
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.2</span></span>
+  <nav class="nav">
+    <a href="./index.html" data-i18n="nav.home">Accueil</a>
+    <a href="./solar.html" class="active" data-i18n="nav.solar">Système solaire</a>
+    <a href="./deepsky.html" data-i18n="nav.deepsky">Ciel profond</a>
+    <a href="./quiz.html" data-i18n="nav.quiz">Quiz</a>
+    <a href="./observe.html" data-i18n="nav.observe">Ce soir</a>
+    <a href="./info.html" data-i18n="nav.info">Infos</a>
+  </nav>
+  <span data-lang-switch></span>
+  <span data-theme-switch></span>
+</header>
+
+<main id="main" class="wrap">
+  <div id="solar"><p style="color:var(--muted)">…</p></div>
+</main>
+
+<footer class="wrap" style="color:var(--faint);font-size:.8rem;text-align:center">
+  <span data-i18n="foot.solar">Éphémérides : astronomy-engine (calcul local, aucune donnée envoyée).</span>
+</footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
+<script defer src="./assets/js/solar.js"></script>
+</body>
+</html>

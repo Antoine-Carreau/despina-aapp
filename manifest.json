@@ -1,0 +1,14 @@
+{
+  "name": "Despina — planétarium interactif",
+  "short_name": "Despina",
+  "description": "Système solaire, ciel profond, quiz et quoi observer ce soir. Sans inscription.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0e1a",
+  "theme_color": "#0a0e1a",
+  "lang": "fr",
+  "icons": [
+    { "src": "./assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
