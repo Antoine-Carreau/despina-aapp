@@ -4,10 +4,15 @@
 
 Sans inscription, sans base de données : tous les calculs se font dans le navigateur.
 
-## Fonctions (v0.2)
-- **Système solaire** : positions et données réelles du jour (astronomy-engine), fiches, diamètres apparents, **toutes les lunes nommées**, **planètes naines** (bascule + explication), **années de découverte**, et un bouton **« i »** partout qui explique chaque champ, sa méthode de calcul et ses sources.
+## Fonctions (v0.4)
+- **Ciel profond** — deux modes au choix :
+  - **Carte vectorielle** (style Stellarium, par défaut) : vue tout-le-ciel ancrée à l'horizon — **zénith au centre, horizon = cercle, Nord en haut** (base stable, jamais « tête en bas »). **88 constellations** et **110 objets Messier** (open data), étoiles jusqu'à magnitude 6, **planètes + Lune + Soleil** calculés en direct. Constellations et objets **cliquables** (fiches, noms). Réglage du **lieu** (géolocalisation ou ville) et de l'**heure** (curseur ±12 h, mode « live »).
+  - **Atlas Aladin** (Lite v3, CDS Strasbourg) : imagerie réelle du ciel, recherche d'objet, fonds de ciel (Voie lactée, DSS2, 2MASS), grille et pointeur SIMBAD.
+- **Ce soir** : coucher du Soleil, **nuit noire** (crépuscule astronomique −18°), Lune (phase, lever/coucher), **planètes visibles** et **objets Messier bien placés**, avec une mini-carte du ciel au crépuscule.
+- **Quiz** : reconnaître une **constellation à sa figure**, deviner le **type** et le **nom** d'objets Messier (QCM, score et série).
+- **Système solaire** : positions et données réelles du jour (astronomy-engine), toutes les lunes nommées, planètes naines, années de découverte, boutons « i » (méthode + sources).
 - **Accueil** illustré (Despina, sources citées), 3 thèmes mémorisés (sombre / clair / **nuit rouge**), **bascule FR / EN**, PWA installable.
-- **Ciel profond**, **Quiz**, **Ce soir** : pages présentées (feuille de route dans `info.html`).
+
 
 ## Déploiement sur GitHub Pages
 1. Créer un dépôt public nommé **`despina-aapp`**.

@@ -25,7 +25,7 @@
 <body>
 <a href="#main" class="skip" data-i18n="nav.home">Accueil</a>
 <header class="topbar">
-  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.2</span></span>
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.4</span></span>
   <nav class="nav">
     <a href="./index.html" data-i18n="nav.home">Accueil</a>
     <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
@@ -38,7 +38,7 @@
 </header>
 
 <main id="main" class="wrap prose">
-  <p class="eyebrow">Despina · v0.2 · note de suivi</p>
+  <p class="eyebrow">Despina · v0.4 · note de suivi</p>
   <h1>Infos, sources &amp; feuille de route</h1>
   <p style="color:var(--muted)"><b>Despina</b> — <i>Demonstrative Exploration Sky Platform for Interactive Navigation and Astronomy</i>.
   Site statique pour apprendre et enseigner l'astronomie (grand public, amateurs, pros). Nommé d'après Despina, lune-berger de l'anneau Le Verrier de Neptune.
@@ -47,6 +47,8 @@
   <h2>Version courante</h2>
   <table>
     <tr><th>Version</th><th>Date</th><th>Contenu</th></tr>
+    <tr><td>0.4</td><td>2026-07</td><td><b>Carte du ciel vectorielle</b> (style Stellarium) : vue tout-le-ciel ancrée à l'horizon — zénith au centre, horizon = cercle, Nord en haut (jamais « tête en bas ») ; <b>88 constellations</b> et <b>110 objets Messier</b> (open data), étoiles jusqu'à magnitude 6, planètes, Lune et Soleil calculés ; constellations et objets <b>cliquables</b> (fiches) ; lieu (géolocalisation / ville) et heure (curseur ±12 h, « live ») ; choix <b>Carte vectorielle</b> ou <b>Atlas Aladin</b>. Page <b>Ce soir</b> (coucher du Soleil, nuit noire, Lune, planètes et Messier bien placés). Page <b>Quiz</b> (reconnaître une constellation à sa figure, type et nom d'objets Messier).</td></tr>
+    <tr><td>0.3</td><td>2026-07</td><td>Page <b>Ciel profond</b> : planétarium plein-ciel Aladin Lite v3 (CDS Strasbourg) — imagerie réelle (HiPS), recherche d'objet, choix du fond de ciel (Voie lactée, DSS2, 2MASS, WISE), sélection Messier cliquable et tracés de constellations, grille &amp; pointeur SIMBAD intégrés.</td></tr>
     <tr><td>0.2</td><td>2026-07</td><td>Renommage Despina ; bascule FR/EN ; accueil illustré (Despina, sources citées) ; refonte Système solaire : toutes les lunes nommées, planètes naines (bascule), années de découverte, boutons « i » expliquant chaque champ, sa méthode de calcul et ses sources.</td></tr>
     <tr><td>0.1</td><td>2026-07</td><td>Base : 3 thèmes (sombre/clair/nuit) mémorisés, responsive, PWA installable, accueil, page Système solaire (positions réelles), page Infos.</td></tr>
   </table>
@@ -63,8 +65,12 @@
       <td><a href="https://ssd.jpl.nasa.gov/" target="_blank" rel="noopener">JPL Solar System Dynamics</a> · <a href="https://www.iau.org/" target="_blank" rel="noopener">UAI</a></td><td>public · évolutif</td></tr>
     <tr><td>Définition d'une planète (naines)</td>
       <td><a href="https://www.iau.org/static/resolutions/Resolution_GA26-5-6.pdf" target="_blank" rel="noopener">UAI, résolution B5 (2006)</a></td><td>public</td></tr>
-    <tr><td>Imagerie ciel profond (à venir)</td>
+    <tr><td>Étoiles, tracés de constellations, catalogue Messier (carte vectorielle)</td>
+      <td><a href="https://github.com/ofrohn/d3-celestial" target="_blank" rel="noopener">d3-celestial</a> (open data) · catalogue <a href="https://github.com/astronexus/HYG-Database" target="_blank" rel="noopener">HYG</a> · figures <a href="https://stellarium.org/" target="_blank" rel="noopener">Stellarium</a></td><td>open data · sans clé</td></tr>
+    <tr><td>Imagerie ciel profond (atlas)</td>
       <td><a href="https://aladin.cds.unistra.fr/AladinLite/" target="_blank" rel="noopener">Aladin Lite v3</a> (CDS Strasbourg, HiPS)</td><td>public · sans clé</td></tr>
+    <tr><td>Recherche de ville (géocodage)</td>
+      <td><a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo Geocoding</a></td><td>ouvert · sans clé</td></tr>
     <tr><td>Faits sur Despina (accueil)</td>
       <td>NASA · Wikipédia · Britannica · JWST/EarthSky <span class="todo">(liens dans « Sources &amp; crédits »)</span></td><td>—</td></tr>
     <tr><td>Polices</td><td>Google Fonts — Spectral, Inter, Space Mono</td><td>OFL</td></tr>
@@ -72,7 +78,7 @@
 
   <h2>Confidentialité</h2>
   <p style="color:var(--muted)">Aucun compte, aucun traceur, aucune donnée envoyée à un serveur. Le stockage local se limite à deux préférences d'affichage :
-  <code>despina-theme</code> (thème) et <code>despina-lang</code> (langue). La future page « Ce soir » demandera ta position uniquement à l'usage, sans jamais la conserver ni la transmettre.</p>
+  <code>despina-theme</code> (thème) et <code>despina-lang</code> (langue). Les pages « Ciel profond » et « Ce soir » utilisent ta position (géolocalisation ou ville) uniquement le temps du calcul, en mémoire : elle n'est ni conservée ni transmise. La recherche de ville interroge l'API ouverte Open-Meteo (sans clé).</p>
 
   <h2>Feuille de route</h2>
   <p style="color:var(--muted)"><span class="done">■</span> fait · <span class="wip">■</span> en cours / prochain · <span class="todo">■</span> prévu</p>
@@ -85,23 +91,28 @@
     <tr><td>Planètes naines (bascule) + pourquoi « naine »</td><td class="done">fait</td><td>0.2</td></tr>
     <tr><td>Boutons « i » : méthode de calcul + sources par champ</td><td class="done">fait</td><td>0.2</td></tr>
     <tr><td>Années de découverte des astres</td><td class="done">fait</td><td>0.2</td></tr>
-    <tr><td>Curseur de date (voir le ciel à une autre date)</td><td class="todo">prévu</td><td>0.3</td></tr>
+    <tr><td>Curseur d'heure (±12 h) + mode « live »</td><td class="done">fait</td><td>0.4</td></tr>
+    <tr><td>Curseur de <b>date</b> complet (autre nuit / autre saison)</td><td class="todo">prévu</td><td>0.5</td></tr>
     <tr><td>Toutes les lunes en position réelle (pas seulement Galilée)</td><td class="todo">prévu</td><td>0.4</td></tr>
   </table>
 
-  <h3>Ciel profond (Aladin)</h3>
+  <h3>Ciel profond</h3>
   <table>
     <tr><th>Fonction</th><th>État</th><th>Version</th></tr>
-    <tr><td>Planétarium plein-ciel (Aladin Lite v3), zoom/clic</td><td class="wip">prochain</td><td>0.3</td></tr>
-    <tr><td>Calques : constellations, Messier, NGC, IC, cardinaux</td><td class="todo">prévu</td><td>0.3</td></tr>
-    <tr><td>Recherche par nom + fiche objet</td><td class="todo">prévu</td><td>0.3</td></tr>
+    <tr><td><b>Carte vectorielle</b> tout-le-ciel (horizon/zénith, Nord repéré, stable)</td><td class="done">fait</td><td>0.4</td></tr>
+    <tr><td>88 constellations + 110 Messier + étoiles mag≤6 (open data)</td><td class="done">fait</td><td>0.4</td></tr>
+    <tr><td>Constellations & objets cliquables (fiches, noms)</td><td class="done">fait</td><td>0.4</td></tr>
+    <tr><td>Lieu (géoloc/ville) + heure (curseur, live)</td><td class="done">fait</td><td>0.4</td></tr>
+    <tr><td>Choix Carte vectorielle / Atlas Aladin (Lite v3)</td><td class="done">fait</td><td>0.4</td></tr>
+    <tr><td>Fonds de ciel Aladin : Voie lactée, DSS2, 2MASS</td><td class="done">fait</td><td>0.3–0.4</td></tr>
+    <tr><td>Calque NGC/IC progressif complet + catalogue SIMBAD</td><td class="wip">amorcé</td><td>0.3–0.4</td></tr>
   </table>
 
   <h3>Quiz &amp; « Ce soir »</h3>
   <table>
     <tr><th>Fonction</th><th>État</th><th>Version</th></tr>
-    <tr><td>Quiz repérage visuel + QCM par thème</td><td class="todo">prévu</td><td>0.4</td></tr>
-    <tr><td>« Ce soir » : coucher Soleil, nuit noire, Lune, cibles</td><td class="todo">prévu</td><td>0.4</td></tr>
+    <tr><td>Quiz : reconnaître une constellation (figure) + QCM Messier (type, nom)</td><td class="done">fait</td><td>0.4</td></tr>
+    <tr><td>« Ce soir » : coucher Soleil, nuit noire (−18°), Lune, planètes & Messier bien placés</td><td class="done">fait</td><td>0.4</td></tr>
     <tr><td>Géolocalisation / saisie de ville (sans clé, sans stockage)</td><td class="todo">prévu</td><td>0.4</td></tr>
   </table>
 

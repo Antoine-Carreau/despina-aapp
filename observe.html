@@ -11,11 +11,24 @@
 <link rel="stylesheet" href="./assets/css/base.css">
 <script src="./assets/js/i18n.js"></script>
 <script src="./assets/js/theme.js"></script>
+<style>
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+  @media (max-width:820px){ .grid2{grid-template-columns:1fr} }
+  .place{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin:.4rem 0 1rem}
+  .place input{background:var(--surface);border:1px solid var(--line);border-radius:9px;color:var(--ink);padding:.5rem .6rem;font-family:inherit}
+  .kv{width:100%;border-collapse:collapse;font-size:.92rem}
+  .kv td{padding:.4rem 0;border-bottom:1px dashed var(--line)}
+  .kv td:last-child{text-align:right;font-family:"Space Mono",monospace}
+  .tlist{list-style:none;padding:0;margin:.3rem 0}
+  .tlist li{display:flex;justify-content:space-between;padding:.32rem 0;border-bottom:1px dashed var(--line);font-size:.9rem}
+  .tlist .mono{font-family:"Space Mono",monospace;color:var(--muted)}
+  #mini{width:100%;max-width:420px;aspect-ratio:1/1;display:block;margin:0 auto}
+  .badge{font:.7rem "Space Mono",monospace;color:var(--bg);background:var(--accent);border-radius:6px;padding:.05rem .4rem}
+</style>
 </head>
 <body>
-<a href="#main" class="skip" data-i18n="nav.home">Accueil</a>
 <header class="topbar">
-  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.2</span></span>
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.4</span></span>
   <nav class="nav">
     <a href="./index.html" data-i18n="nav.home">Accueil</a>
     <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
@@ -26,14 +39,139 @@
   </nav>
   <span data-lang-switch></span><span data-theme-switch></span>
 </header>
-<main id="main" class="wrap">
-  <div class="stub card">
-    <p class="eyebrow" data-i18n="soon">À venir</p>
-    <p class="big display" data-i18n="ob.h">Ce soir</p>
-    <p style="color:var(--muted);max-width:52ch;margin-inline:auto" data-i18n="ob.p"></p>
-    <p style="color:var(--faint);font-size:.85rem;max-width:52ch;margin-inline:auto" data-i18n="ob.tech"></p>
-    <p><a class="btn primary" href="./index.html" data-i18n="nav.back">← Retour à l'accueil</a></p>
+
+<main class="wrap">
+  <p class="eyebrow" id="t-eyebrow">Ce soir · à l'œil nu et aux jumelles</p>
+  <h1 id="t-title">Ce soir</h1>
+  <div class="place">
+    <button class="btn" id="geo">📍 <span id="t-geo">Ma position</span></button>
+    <input type="text" id="city" placeholder="Ville…" aria-label="Ville">
+    <button class="btn primary" id="cityGo">→</button>
+    <span class="mono" id="loc" style="color:var(--faint);font-size:.82rem"></span>
   </div>
+
+  <div class="grid2">
+    <section class="card">
+      <p class="eyebrow" id="t-sun">Soleil & crépuscule</p>
+      <table class="kv" id="sun"></table>
+      <p class="eyebrow" id="t-moon" style="margin-top:1rem">Lune</p>
+      <table class="kv" id="moon"></table>
+    </section>
+    <section class="card">
+      <p class="eyebrow" id="t-mini">Le ciel au crépuscule</p>
+      <canvas id="mini"></canvas>
+      <p class="hint" id="t-hint" style="color:var(--faint);font-size:.76rem"></p>
+    </section>
+  </div>
+
+  <div class="grid2" style="margin-top:1rem">
+    <section class="card">
+      <p class="eyebrow" id="t-planets">Planètes visibles</p>
+      <ul class="tlist" id="planets"></ul>
+    </section>
+    <section class="card">
+      <p class="eyebrow" id="t-targets">Objets à pointer (bien placés)</p>
+      <ul class="tlist" id="targets"></ul>
+    </section>
+  </div>
+  <p class="hint" id="t-src" style="color:var(--faint);text-align:center;margin-top:1.4rem"></p>
 </main>
+
+<script defer src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
+<script defer src="./assets/js/skymap.js"></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",()=>{
+  const D=window.Despina, lang=()=>D.getLang?D.getLang():"fr";
+  const TT={fr:{eyebrow:"Ce soir · à l'œil nu et aux jumelles",title:"Ce soir",geo:"Ma position",
+      sun:"Soleil & crépuscule",moon:"Lune",mini:"Le ciel au crépuscule",planets:"Planètes visibles",
+      targets:"Objets à pointer (bien placés)",hint:"Zénith au centre, horizon = cercle, Nord en haut.",
+      src:"Calculs locaux via astronomy-engine · positions au crépuscule astronomique (Soleil à −18°).",
+      sunset:"Coucher du Soleil",dusk:"Nuit noire (−18°)",dawn:"Fin de nuit",
+      rise:"Lever",set:"Coucher",illum:"Illumination",none:"Aucune au-dessus de l'horizon ce soir.",
+      up:"visible",always:"toujours levé",city:"Ville introuvable"},
+    en:{eyebrow:"Tonight · naked eye & binoculars",title:"Tonight",geo:"My location",
+      sun:"Sun & twilight",moon:"Moon",mini:"The sky at dusk",planets:"Visible planets",
+      targets:"Targets to point at (well placed)",hint:"Zenith at centre, horizon = circle, North on top.",
+      src:"Local computation via astronomy-engine · positions at astronomical dusk (Sun at −18°).",
+      sunset:"Sunset",dusk:"Astronomical night (−18°)",dawn:"End of night",
+      rise:"Rise",set:"Set",illum:"Illumination",none:"None above the horizon tonight.",
+      up:"up",always:"always up",city:"City not found"}};
+  const tt=k=>(TT[lang()]||TT.fr)[k];
+  const TYPE={GX:{fr:"Galaxie",en:"Galaxy"},OC:{fr:"Amas ouvert",en:"Open cluster"},GC:{fr:"Amas globulaire",en:"Globular"},
+    NE:{fr:"Nébuleuse",en:"Nebula"},PN:{fr:"Néb. planétaire",en:"Planetary neb."},SR:{fr:"Rémanent SN",en:"SN remnant"}};
+  const PL={Mercury:{fr:"Mercure",en:"Mercury"},Venus:{fr:"Vénus",en:"Venus"},Mars:{fr:"Mars",en:"Mars"},
+    Jupiter:{fr:"Jupiter",en:"Jupiter"},Saturn:{fr:"Saturne",en:"Saturn"}};
+  function labels(){ ["eyebrow","title","geo","sun","moon","mini","planets","targets","hint","src"].forEach(k=>{
+    const el=document.getElementById("t-"+k); if(el) el.textContent=tt(k); }); }
+  labels();
+
+  const DEG=Math.PI/180, R2D=180/Math.PI;
+  function altaz(raDeg,decDeg,lstDeg,latRad){const H=(lstDeg-raDeg)*DEG,dec=decDeg*DEG;
+    const sa=Math.sin(dec)*Math.sin(latRad)+Math.cos(dec)*Math.cos(latRad)*Math.cos(H);
+    const alt=Math.asin(Math.max(-1,Math.min(1,sa)));return alt*R2D;}
+  const fmtT=d=>d?d.toLocaleTimeString(lang()==="en"?"en":"fr-FR",{hour:"2-digit",minute:"2-digit"}):"—";
+  function moonName(deg){const n=lang()==="en"
+      ?["new","waxing crescent","first quarter","waxing gibbous","full","waning gibbous","last quarter","waning crescent"]
+      :["nouvelle lune","premier croissant","premier quartier","gibbeuse croissante","pleine lune","gibbeuse décroissante","dernier quartier","dernier croissant"];
+    return n[Math.round(deg/45)%8];}
+
+  let loc={lat:48.8566,lon:2.3522,name:"Paris"}, mini, sky;
+  function noonStart(){ const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate(),12,0,0); }
+
+  function compute(){
+    const A=window.Astronomy; if(!A){document.getElementById("t-src").textContent="astronomy-engine indisponible.";return;}
+    document.getElementById("loc").textContent=loc.name;
+    const obs=new A.Observer(loc.lat,loc.lon,0), start=noonStart();
+    const safe=(f)=>{try{return f();}catch(e){return null;}};
+    const sunset=safe(()=>A.SearchRiseSet("Sun",obs,-1,start,1));
+    const dusk=safe(()=>A.SearchAltitude("Sun",obs,-1,start,1,-18));
+    const dawn=safe(()=>A.SearchAltitude("Sun",obs,1,dusk?dusk.date:start,1,-18));
+    const duskDate=(dusk&&dusk.date)||(sunset&&sunset.date)||new Date();
+    document.getElementById("sun").innerHTML=
+      `<tr><td>${tt("sunset")}</td><td>${fmtT(sunset&&sunset.date)}</td></tr>
+       <tr><td>${tt("dusk")}</td><td>${fmtT(dusk&&dusk.date)}</td></tr>
+       <tr><td>${tt("dawn")}</td><td>${fmtT(dawn&&dawn.date)}</td></tr>`;
+    const mr=safe(()=>A.SearchRiseSet("Moon",obs,1,start,1)), ms=safe(()=>A.SearchRiseSet("Moon",obs,-1,start,1));
+    const ill=safe(()=>A.Illumination("Moon",duskDate)), ph=safe(()=>A.MoonPhase(duskDate));
+    document.getElementById("moon").innerHTML=
+      `<tr><td>${tt("illum")}</td><td>${ill?Math.round(ill.phase_fraction*100)+" % · "+moonName(ph):"—"}</td></tr>
+       <tr><td>${tt("rise")}</td><td>${fmtT(mr&&mr.date)}</td></tr>
+       <tr><td>${tt("set")}</td><td>${fmtT(ms&&ms.date)}</td></tr>`;
+    // planètes visibles au crépuscule
+    const lst=(((A.SiderealTime(duskDate)*15+loc.lon)%360)+360)%360, latR=loc.lat*DEG;
+    const pl=Object.keys(PL).map(b=>{ const eq=safe(()=>A.Equator(b,duskDate,obs,true,true)); if(!eq)return null;
+      const alt=altaz(eq.ra*15,eq.dec,lst,latR); return {b,alt}; }).filter(x=>x&&x.alt>0).sort((a,b)=>b.alt-a.alt);
+    document.getElementById("planets").innerHTML = pl.length
+      ? pl.map(p=>`<li><span>${PL[p.b][lang()]}</span><span class="mono">${Math.round(p.alt)}° ${lang()==="en"?"alt":"h"}</span></li>`).join("")
+      : `<li style="color:var(--muted)">${tt("none")}</li>`;
+    // Messier bien placés
+    if(sky){
+      const good=sky.messier.map(m=>({m,alt:altaz(m[1],m[2],lst,latR)}))
+        .filter(x=>x.alt>28 && (x.m[4]==null||x.m[4]<9)).sort((a,b)=>b.alt-a.alt).slice(0,8);
+      document.getElementById("targets").innerHTML=good.map(x=>{
+        const m=x.m, ty=TYPE[m[3]]?TYPE[m[3]][lang()]:m[3];
+        return `<li><span>${m[0]}${m[5]?" · "+m[5]:""} <span class="mono" style="color:var(--faint)">${ty}</span></span><span class="mono">${Math.round(x.alt)}°</span></li>`;
+      }).join("");
+    }
+    // mini carte
+    if(mini){ mini.setLocation(loc.lat,loc.lon,loc.name); mini.setDate(duskDate); }
+    else if(sky){ mini=D.SkyMap(document.getElementById("mini"),{data:sky,location:loc,date:duskDate,
+      layers:{labels:false,grid:true},onSelect:()=>{}}); }
+  }
+
+  fetch("./assets/data/sky.json").then(r=>r.json()).then(d=>{sky=d;compute();}).catch(()=>compute());
+
+  document.getElementById("geo").addEventListener("click",()=>{ if(!navigator.geolocation)return;
+    navigator.geolocation.getCurrentPosition(p=>{ loc={lat:p.coords.latitude,lon:p.coords.longitude,name:lang()==="en"?"My location":"Ma position"}; compute(); }); });
+  function geocode(){ const q=document.getElementById("city").value.trim(); if(!q)return;
+    fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=1&language=${lang()}`)
+      .then(r=>r.json()).then(j=>{ const r=j.results&&j.results[0]; if(!r){document.getElementById("loc").textContent=tt("city");return;}
+        loc={lat:r.latitude,lon:r.longitude,name:r.name+(r.country_code?" ("+r.country_code+")":"")}; compute();
+      }).catch(()=>{document.getElementById("loc").textContent=tt("city");}); }
+  document.getElementById("cityGo").addEventListener("click",geocode);
+  document.getElementById("city").addEventListener("keydown",e=>{ if(e.key==="Enter")geocode(); });
+  document.addEventListener("despina:lang",()=>{ labels(); compute(); });
+});
+</script>
 </body>
 </html>

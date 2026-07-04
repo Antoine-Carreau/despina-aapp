@@ -11,11 +11,31 @@
 <link rel="stylesheet" href="./assets/css/base.css">
 <script src="./assets/js/i18n.js"></script>
 <script src="./assets/js/theme.js"></script>
+<style>
+  .quizwrap{max-width:640px;margin:0 auto}
+  .topics{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;margin:.6rem 0}
+  .topics .chip{cursor:pointer}
+  .topics .chip[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:transparent;font-weight:600}
+  .score{display:flex;gap:1.2rem;justify-content:center;margin:.6rem 0;font-family:"Space Mono",monospace;color:var(--muted);font-size:.9rem}
+  .score b{color:var(--accent)}
+  .qcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.3rem;text-align:center;box-shadow:var(--shadow)}
+  .prompt{font-size:1.15rem;margin:.2rem 0 1rem}
+  #fig{width:100%;max-width:340px;aspect-ratio:4/3;display:block;margin:0 auto 1rem}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.4rem}
+  @media (max-width:480px){ .opts{grid-template-columns:1fr} }
+  .opt{padding:.7rem;border:1px solid var(--line);border-radius:11px;background:var(--surface-2);color:var(--ink);
+    cursor:pointer;font-family:inherit;font-size:.95rem;transition:border-color .15s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.good{background:#1f7a4d33;border-color:#4bd48e;color:var(--ink)}
+  .opt.bad{background:#7a1f1f33;border-color:var(--danger)}
+  .opt:disabled{cursor:default}
+  .feedback{min-height:1.6em;margin-top:.9rem;font-size:.95rem}
+  .next{margin-top:.6rem}
+</style>
 </head>
 <body>
-<a href="#main" class="skip" data-i18n="nav.home">Accueil</a>
 <header class="topbar">
-  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.2</span></span>
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.4</span></span>
   <nav class="nav">
     <a href="./index.html" data-i18n="nav.home">Accueil</a>
     <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
@@ -26,14 +46,124 @@
   </nav>
   <span data-lang-switch></span><span data-theme-switch></span>
 </header>
-<main id="main" class="wrap">
-  <div class="stub card">
-    <p class="eyebrow" data-i18n="soon">À venir</p>
-    <p class="big display" data-i18n="qz.h">Quiz</p>
-    <p style="color:var(--muted);max-width:52ch;margin-inline:auto" data-i18n="qz.p"></p>
-    <p style="color:var(--faint);font-size:.85rem;max-width:52ch;margin-inline:auto" data-i18n="qz.tech"></p>
-    <p><a class="btn primary" href="./index.html" data-i18n="nav.back">← Retour à l'accueil</a></p>
+
+<main class="wrap quizwrap">
+  <p class="eyebrow" id="t-eyebrow" style="text-align:center">Quiz · teste-toi</p>
+  <h1 id="t-title" style="text-align:center">Quiz du ciel</h1>
+  <div class="topics" id="topics"></div>
+  <div class="score"><span id="s-score">Score <b>0</b></span><span id="s-streak">Série <b>0</b></span><span id="s-total">/ 0</span></div>
+  <div class="qcard">
+    <p class="prompt" id="prompt">…</p>
+    <canvas id="fig" hidden></canvas>
+    <div class="opts" id="opts"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="btn primary next" id="next" hidden>→</button>
   </div>
 </main>
+
+<script defer>
+document.addEventListener("DOMContentLoaded",()=>{
+  const D=window.Despina, lang=()=>D.getLang?D.getLang():"fr";
+  const TT={fr:{eyebrow:"Quiz · teste-toi",title:"Quiz du ciel",score:"Score",streak:"Série",
+      tConst:"Constellations",tType:"Type d'objet",tName:"Nom d'objet",
+      qConst:"Quelle est cette constellation ?",qType:d=>`Quel type d'objet est ${d} ?`,qName:d=>`Quel objet Messier est « ${d} » ?`,
+      good:"Correct !",bad:d=>`Non — c'était ${d}.`,next:"Suivant →",pickTopic:"Choisis au moins un thème."},
+    en:{eyebrow:"Quiz · test yourself",title:"Sky quiz",score:"Score",streak:"Streak",
+      tConst:"Constellations",tType:"Object type",tName:"Object name",
+      qConst:"Which constellation is this?",qType:d=>`What type of object is ${d}?`,qName:d=>`Which Messier object is "${d}"?`,
+      good:"Correct!",bad:d=>`No — it was ${d}.`,next:"Next →",pickTopic:"Pick at least one topic."}};
+  const tt=k=>(TT[lang()]||TT.fr)[k];
+  const TYPE={GX:{fr:"une galaxie",en:"a galaxy"},OC:{fr:"un amas ouvert",en:"an open cluster"},
+    GC:{fr:"un amas globulaire",en:"a globular cluster"},NE:{fr:"une nébuleuse",en:"a nebula"},
+    PN:{fr:"une nébuleuse planétaire",en:"a planetary nebula"},SR:{fr:"un rémanent de supernova",en:"a supernova remnant"}};
+  const FAMOUS=["Ori","UMa","Cas","Cyg","Lyr","Leo","Sco","Tau","Gem","CMa","Boo","Aql","And","Peg","Per","Aur","Cnc","Vir","Sgr","Cap","Aqr","Ari","Cru","Cen","CrB","Lib","Del","Cet","Dra","UMi","Crv","Sge","Tri","CMi"];
+  const rnd=a=>a[Math.floor(Math.random()*a.length)];
+  const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
+
+  let sky, topics={const:true,type:true,name:true}, score=0, streak=0, total=0, answered=false;
+  const el=id=>document.getElementById(id);
+
+  function labels(){ el("t-eyebrow").textContent=tt("eyebrow"); el("t-title").textContent=tt("title");
+    buildTopics(); el("next").textContent=tt("next"); updScore(); }
+  function updScore(){ el("s-score").innerHTML=`${tt("score")} <b>${score}</b>`;
+    el("s-streak").innerHTML=`${tt("streak")} <b>${streak}</b>`; el("s-total").textContent="/ "+total; }
+  function buildTopics(){
+    const box=el("topics"); const defs=[["const","tConst"],["type","tType"],["name","tName"]];
+    box.innerHTML=defs.map(([k,l])=>`<button class="chip" data-k="${k}" aria-pressed="${topics[k]}">${tt(l)}</button>`).join("");
+    box.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ topics[b.dataset.k]=!topics[b.dataset.k];
+      if(!Object.values(topics).some(v=>v)) topics[b.dataset.k]=true;
+      b.setAttribute("aria-pressed",topics[b.dataset.k]); }));
+  }
+
+  // dessine une figure de constellation isolée (nord en haut)
+  function drawFig(c){
+    const cv=el("fig"); cv.hidden=false;
+    const dpr=Math.min(devicePixelRatio||1,2), W=cv.clientWidth, H=cv.clientHeight;
+    cv.width=W*dpr; cv.height=H*dpr; const x=cv.getContext("2d"); x.setTransform(dpr,0,0,dpr,0,0); x.clearRect(0,0,W,H);
+    let pts=[]; c.lines.forEach(seg=>seg.forEach(p=>pts.push(p.slice())));
+    let ras=pts.map(p=>p[0]); if(Math.max(...ras)-Math.min(...ras)>180) pts.forEach(p=>{ if(p[0]<180)p[0]+=360; });
+    const raA=pts.map(p=>p[0]), decA=pts.map(p=>p[1]);
+    const raMin=Math.min(...raA),raMax=Math.max(...raA),decMin=Math.min(...decA),decMax=Math.max(...decA);
+    const pad=26, sw=W-2*pad, sh=H-2*pad;
+    const sx=(raMax-raMin)||1, sy=(decMax-decMin)||1, s=Math.min(sw/sx,sh/sy);
+    const ox=pad+(sw-s*sx)/2, oy=pad+(sh-s*sy)/2;
+    const T=p=>[ox+(raMax-p[0])*s, oy+(decMax-p[1])*s]; // RA vers la gauche, Nord en haut
+    const night=document.documentElement.getAttribute("data-theme")==="night";
+    x.strokeStyle=night?"#8a1f16":getComputedStyle(document.documentElement).getPropertyValue("--accent-2").trim()||"#6ea8ff";
+    x.lineWidth=1.6; x.globalAlpha=.85;
+    c.lines.forEach(seg=>{ x.beginPath(); seg.forEach((p0,i)=>{ let p=p0.slice(); if(p[0]<180&&Math.max(...ras)-Math.min(...ras)>180)p[0]+=360; const q=T(p); i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]); }); x.stroke(); });
+    x.globalAlpha=1; x.fillStyle=night?"#ff5a49":"#fff";
+    pts.forEach(p=>{ const q=T(p); x.beginPath(); x.arc(q[0],q[1],2.4,0,7); x.fill(); });
+  }
+
+  function ask(){
+    answered=false; el("feedback").textContent=""; el("feedback").className="feedback"; el("next").hidden=true;
+    const active=Object.keys(topics).filter(k=>topics[k]);
+    if(!active.length){ el("prompt").textContent=tt("pickTopic"); el("opts").innerHTML=""; el("fig").hidden=true; return; }
+    const mode=rnd(active);
+    if(mode==="const"){
+      el("fig").hidden=false;
+      const pool=sky.consts.filter(c=>FAMOUS.includes(c.d)&&c.lines.length);
+      const correct=rnd(pool); drawFig(correct);
+      const others=shuffle(pool.filter(c=>c.d!==correct.d)).slice(0,3);
+      const opts=shuffle([correct,...others]);
+      el("prompt").textContent=tt("qConst");
+      renderOpts(opts.map(c=>({label:lang()==="en"?c.en:c.fr, ok:c.d===correct.d})), lang()==="en"?correct.en:correct.fr);
+    } else if(mode==="type"){
+      el("fig").hidden=true;
+      const correct=rnd(sky.messier); const disp=correct[0]+(correct[5]?" ("+correct[5]+")":"");
+      const allT=["GX","OC","GC","NE","PN","SR"]; const others=shuffle(allT.filter(t=>t!==correct[3])).slice(0,3);
+      const opts=shuffle([correct[3],...others]);
+      el("prompt").textContent=tt("qType")(disp);
+      renderOpts(opts.map(t=>({label:TYPE[t][lang()], ok:t===correct[3]})), TYPE[correct[3]][lang()]);
+    } else {
+      el("fig").hidden=true;
+      const named=sky.messier.filter(m=>m[5]); const correct=rnd(named);
+      const others=shuffle(named.filter(m=>m[0]!==correct[0])).slice(0,3);
+      const opts=shuffle([correct,...others]);
+      el("prompt").textContent=tt("qName")(correct[5]);
+      renderOpts(opts.map(m=>({label:m[0], ok:m[0]===correct[0]})), correct[0]);
+    }
+  }
+  function renderOpts(opts, correctLabel){
+    const box=el("opts"); box.innerHTML="";
+    opts.forEach(o=>{ const b=document.createElement("button"); b.className="opt"; b.textContent=o.label;
+      b.addEventListener("click",()=>choose(b,o.ok,correctLabel,box)); box.appendChild(b); });
+  }
+  function choose(btn, ok, correctLabel, box){
+    if(answered) return; answered=true; total++;
+    box.querySelectorAll("button").forEach(b=>b.disabled=true);
+    if(ok){ btn.classList.add("good"); score++; streak++; el("feedback").textContent=tt("good"); el("feedback").style.color="#4bd48e"; }
+    else { btn.classList.add("bad"); streak=0; el("feedback").textContent=tt("bad")(correctLabel); el("feedback").style.color="var(--danger)";
+      box.querySelectorAll("button").forEach(b=>{ if(b.textContent===correctLabel)b.classList.add("good"); }); }
+    updScore(); el("next").hidden=false;
+  }
+  el("next").addEventListener("click",ask);
+  document.addEventListener("despina:lang",()=>{ labels(); ask(); });
+
+  fetch("./assets/data/sky.json").then(r=>r.json()).then(d=>{ sky=d; labels(); ask(); })
+    .catch(()=>{ el("prompt").textContent="Données indisponibles."; });
+});
+</script>
 </body>
 </html>
