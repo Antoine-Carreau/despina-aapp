@@ -3,8 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Quiz — Despina</title>
+<title>Quiz d'astronomie — constellations et Messier | Despina</title>
 <meta name="theme-color" content="#0a0e1a">
+<meta name="description" content="Entraîne-toi à reconnaître les constellations et les objets Messier : cinq modes au choix, dont un mode photo, et trois difficultés.">
+<link rel="canonical" href="https://VOTRE-COMPTE.github.io/despina-aapp/quiz.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Despina">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:url" content="https://VOTRE-COMPTE.github.io/despina-aapp/quiz.html">
+<meta property="og:title" content="Quiz d'astronomie — constellations et Messier | Despina">
+<meta property="og:description" content="Entraîne-toi à reconnaître les constellations et les objets Messier : cinq modes au choix, dont un mode photo, et trois difficultés.">
+<meta property="og:image" content="https://VOTRE-COMPTE.github.io/despina-aapp/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Despina — planétarium interactif">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quiz d'astronomie — constellations et Messier | Despina">
+<meta name="twitter:description" content="Entraîne-toi à reconnaître les constellations et les objets Messier : cinq modes au choix, dont un mode photo, et trois difficultés.">
+<meta name="twitter:image" content="https://VOTRE-COMPTE.github.io/despina-aapp/assets/img/og.png">
 <link rel="icon" href="./assets/img/icon.svg">
 <link rel="manifest" href="./manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
@@ -12,34 +29,52 @@
 <script src="./assets/js/i18n.js"></script>
 <script src="./assets/js/theme.js"></script>
 <style>
-  .quizwrap{max-width:640px;margin:0 auto}
-  .topics{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;margin:.6rem 0}
-  .topics .chip{cursor:pointer}
-  .topics .chip[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:transparent;font-weight:600}
-  .score{display:flex;gap:1.2rem;justify-content:center;margin:.6rem 0;font-family:"Space Mono",monospace;color:var(--muted);font-size:.9rem}
+  .quizwrap{max-width:660px;margin:0 auto}
+  /* --- écran de choix du mode --- */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1.2rem}
+  @media (max-width:560px){ .modes{grid-template-columns:1fr} }
+  .mode{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem;text-align:left;
+    cursor:pointer;font-family:inherit;color:var(--ink);transition:border-color .15s,transform .15s}
+  .mode:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .mode .ic{font-size:1.5rem}
+  .mode h3{margin:.35rem 0 .2rem;font-size:1.05rem}
+  .mode p{margin:0;color:var(--faint);font-size:.82rem;line-height:1.45}
+  .diffrow{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;margin-top:1.2rem}
+  .diffrow .chip{cursor:pointer}
+  .diffrow .chip[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:transparent;font-weight:600}
+  /* --- jeu --- */
+  .score{display:flex;gap:1.1rem;justify-content:center;align-items:center;margin:.6rem 0;
+    font-family:"Space Mono",monospace;color:var(--muted);font-size:.86rem;flex-wrap:wrap}
   .score b{color:var(--accent)}
-  .qcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.3rem;text-align:center;box-shadow:var(--shadow)}
-  .prompt{font-size:1.15rem;margin:.2rem 0 1rem}
+  .qcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.2rem;text-align:center;box-shadow:var(--shadow)}
+  .prompt{font-size:1.1rem;margin:.2rem 0 1rem}
   #fig{width:100%;max-width:340px;aspect-ratio:4/3;display:block;margin:0 auto 1rem}
-  .opts{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.4rem}
+  .qphoto{position:relative;width:100%;max-width:320px;aspect-ratio:1/1;margin:0 auto 1rem;
+    border-radius:12px;overflow:hidden;background:#05070f}
+  .qphoto img{width:100%;height:100%;object-fit:cover;display:block}
+  .qphoto .loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--faint);
+    font:.75rem "Space Mono",monospace;text-align:center;padding:1rem}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-top:.4rem}
   @media (max-width:480px){ .opts{grid-template-columns:1fr} }
   .opt{padding:.7rem;border:1px solid var(--line);border-radius:11px;background:var(--surface-2);color:var(--ink);
     cursor:pointer;font-family:inherit;font-size:.95rem;transition:border-color .15s}
-  .opt:hover{border-color:var(--accent)}
-  .opt.good{background:#1f7a4d33;border-color:#4bd48e;color:var(--ink)}
+  .opt:hover:not(:disabled){border-color:var(--accent)}
+  .opt.good{background:#1f7a4d33;border-color:#4bd48e}
   .opt.bad{background:#7a1f1f33;border-color:var(--danger)}
   .opt:disabled{cursor:default}
-  .feedback{min-height:1.6em;margin-top:.9rem;font-size:.95rem}
-  .next{margin-top:.6rem}
+  .feedback{min-height:1.6em;margin-top:.9rem;font-size:.92rem}
+  .feedback .learn{display:block;color:var(--faint);font-size:.8rem;margin-top:.25rem}
+  .qfoot{display:flex;gap:.5rem;justify-content:center;margin-top:.8rem;flex-wrap:wrap}
 </style>
 </head>
 <body>
 <header class="topbar">
-  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.4</span></span>
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.6</span></span>
   <nav class="nav">
     <a href="./index.html" data-i18n="nav.home">Accueil</a>
     <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
     <a href="./deepsky.html" data-i18n="nav.deepsky">Ciel profond</a>
+    <a href="./messier.html" data-i18n="nav.messier">Messier</a>
     <a href="./quiz.html" class="active" data-i18n="nav.quiz">Quiz</a>
     <a href="./observe.html" data-i18n="nav.observe">Ce soir</a>
     <a href="./info.html" data-i18n="nav.info">Infos</a>
@@ -48,121 +83,239 @@
 </header>
 
 <main class="wrap quizwrap">
-  <p class="eyebrow" id="t-eyebrow" style="text-align:center">Quiz · teste-toi</p>
-  <h1 id="t-title" style="text-align:center">Quiz du ciel</h1>
-  <div class="topics" id="topics"></div>
-  <div class="score"><span id="s-score">Score <b>0</b></span><span id="s-streak">Série <b>0</b></span><span id="s-total">/ 0</span></div>
-  <div class="qcard">
-    <p class="prompt" id="prompt">…</p>
-    <canvas id="fig" hidden></canvas>
-    <div class="opts" id="opts"></div>
-    <div class="feedback" id="feedback"></div>
-    <button class="btn primary next" id="next" hidden>→</button>
-  </div>
+  <!-- écran d'accueil : on choisit UN mode -->
+  <section id="home">
+    <p class="eyebrow" id="t-eyebrow" style="text-align:center">Quiz · choisis un mode</p>
+    <h1 id="t-title" style="text-align:center">Quiz du ciel</h1>
+    <p class="note" id="t-lede" style="text-align:center;color:var(--faint);font-size:.86rem"></p>
+    <div class="modes" id="modes"></div>
+    <div class="diffrow" id="diffrow"></div>
+  </section>
+
+  <!-- jeu -->
+  <section id="game" hidden>
+    <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
+      <button class="btn" id="back">← <span id="t-back">Modes</span></button>
+      <span class="eyebrow" id="modeName" style="margin-left:auto"></span>
+    </div>
+    <div class="score">
+      <span id="s-score">Score <b>0</b></span><span id="s-streak">Série <b>0</b></span>
+      <span id="s-total">/ 0</span><span id="s-best"></span>
+    </div>
+    <div class="qcard">
+      <p class="prompt" id="prompt">…</p>
+      <canvas id="fig" hidden></canvas>
+      <div class="qphoto" id="qphoto" hidden></div>
+      <div class="opts" id="opts"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="qfoot">
+        <button class="btn primary" id="next" hidden>→</button>
+        <a class="btn" id="learn" hidden href="./messier.html"></a>
+      </div>
+    </div>
+  </section>
 </main>
 
+<script defer src="./assets/vendor/astronomy.browser.min.js"></script>
+<script defer src="./assets/js/skyphoto.js"></script>
 <script defer>
 document.addEventListener("DOMContentLoaded",()=>{
   const D=window.Despina, lang=()=>D.getLang?D.getLang():"fr";
-  const TT={fr:{eyebrow:"Quiz · teste-toi",title:"Quiz du ciel",score:"Score",streak:"Série",
-      tConst:"Constellations",tType:"Type d'objet",tName:"Nom d'objet",
-      qConst:"Quelle est cette constellation ?",qType:d=>`Quel type d'objet est ${d} ?`,qName:d=>`Quel objet Messier est « ${d} » ?`,
-      good:"Correct !",bad:d=>`Non — c'était ${d}.`,next:"Suivant →",pickTopic:"Choisis au moins un thème."},
-    en:{eyebrow:"Quiz · test yourself",title:"Sky quiz",score:"Score",streak:"Streak",
-      tConst:"Constellations",tType:"Object type",tName:"Object name",
-      qConst:"Which constellation is this?",qType:d=>`What type of object is ${d}?`,qName:d=>`Which Messier object is "${d}"?`,
-      good:"Correct!",bad:d=>`No — it was ${d}.`,next:"Next →",pickTopic:"Pick at least one topic."}};
+  const TT={fr:{eyebrow:"Quiz · choisis un mode",title:"Quiz du ciel",
+      lede:"Un mode à la fois : tu sais toujours sur quoi tu t'exerces. La difficulté change le nombre de propositions et le vivier d'objets.",
+      score:"Score",streak:"Série",best:"Record",back:"Modes",next:"Suivant →",learn:"Voir la fiche",
+      easy:"Facile",normal:"Normal",hard:"Difficile",diff:"Difficulté :",
+      good:"Correct !",bad:d=>`Non — c'était ${d}.`,
+      qConst:"Quelle est cette constellation ?",
+      qPhoto:"Quel objet Messier est-ce ?",
+      qType:d=>`Quel type d'objet est ${d} ?`,
+      qName:d=>`Quel objet Messier est « ${d} » ?`,
+      qCons:d=>`Dans quelle constellation se trouve ${d} ?`,
+      loading:"Chargement de l'image…",failed:"Image indisponible (service CDS injoignable). Passe la question.",
+      skip:"Passer"},
+    en:{eyebrow:"Quiz · pick a mode",title:"Sky quiz",
+      lede:"One mode at a time, so you always know what you're practising. Difficulty changes the number of options and the pool of objects.",
+      score:"Score",streak:"Streak",best:"Best",back:"Modes",next:"Next →",learn:"Open the card",
+      easy:"Easy",normal:"Normal",hard:"Hard",diff:"Difficulty:",
+      good:"Correct!",bad:d=>`No — it was ${d}.`,
+      qConst:"Which constellation is this?",
+      qPhoto:"Which Messier object is this?",
+      qType:d=>`What type of object is ${d}?`,
+      qName:d=>`Which Messier object is "${d}"?`,
+      qCons:d=>`Which constellation is ${d} in?`,
+      loading:"Loading image…",failed:"Image unavailable (CDS service unreachable). Skip this one.",
+      skip:"Skip"}};
   const tt=k=>(TT[lang()]||TT.fr)[k];
+  const MODES={fr:{
+      const:{ic:"✧",t:"Constellations",d:"Une figure s'affiche, retrouve son nom parmi les propositions."},
+      photo:{ic:"📷",t:"Photos Messier",d:"Une vraie photo du ciel — devine l'objet. Le meilleur entraînement visuel."},
+      type:{ic:"◍",t:"Types d'objets",d:"Galaxie, amas, nébuleuse ? Classe chaque objet Messier."},
+      name:{ic:"✎",t:"Noms d'objets",d:"« Nébuleuse d'Orion » → quel numéro Messier ?"},
+      cons:{ic:"⌖",t:"Objet → constellation",d:"Dans quelle constellation se cache cet objet Messier ?"}},
+    en:{
+      const:{ic:"✧",t:"Constellations",d:"A figure appears — find its name among the options."},
+      photo:{ic:"📷",t:"Messier photos",d:"A real sky photo — name the object. The best visual training."},
+      type:{ic:"◍",t:"Object types",d:"Galaxy, cluster, nebula? Classify each Messier object."},
+      name:{ic:"✎",t:"Object names",d:"\"Orion Nebula\" → which Messier number?"},
+      cons:{ic:"⌖",t:"Object → constellation",d:"Which constellation hides this Messier object?"}}};
   const TYPE={GX:{fr:"une galaxie",en:"a galaxy"},OC:{fr:"un amas ouvert",en:"an open cluster"},
     GC:{fr:"un amas globulaire",en:"a globular cluster"},NE:{fr:"une nébuleuse",en:"a nebula"},
-    PN:{fr:"une nébuleuse planétaire",en:"a planetary nebula"},SR:{fr:"un rémanent de supernova",en:"a supernova remnant"}};
+    PN:{fr:"une nébuleuse planétaire",en:"a planetary nebula"},SR:{fr:"un rémanent de supernova",en:"a supernova remnant"},
+    OT:{fr:"un astérisme",en:"an asterism"}};
   const FAMOUS=["Ori","UMa","Cas","Cyg","Lyr","Leo","Sco","Tau","Gem","CMa","Boo","Aql","And","Peg","Per","Aur","Cnc","Vir","Sgr","Cap","Aqr","Ari","Cru","Cen","CrB","Lib","Del","Cet","Dra","UMi","Crv","Sge","Tri","CMi"];
   const rnd=a=>a[Math.floor(Math.random()*a.length)];
   const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
-
-  let sky, topics={const:true,type:true,name:true}, score=0, streak=0, total=0, answered=false;
   const el=id=>document.getElementById(id);
 
-  function labels(){ el("t-eyebrow").textContent=tt("eyebrow"); el("t-title").textContent=tt("title");
-    buildTopics(); el("next").textContent=tt("next"); updScore(); }
-  function updScore(){ el("s-score").innerHTML=`${tt("score")} <b>${score}</b>`;
-    el("s-streak").innerHTML=`${tt("streak")} <b>${streak}</b>`; el("s-total").textContent="/ "+total; }
-  function buildTopics(){
-    const box=el("topics"); const defs=[["const","tConst"],["type","tType"],["name","tName"]];
-    box.innerHTML=defs.map(([k,l])=>`<button class="chip" data-k="${k}" aria-pressed="${topics[k]}">${tt(l)}</button>`).join("");
-    box.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ topics[b.dataset.k]=!topics[b.dataset.k];
-      if(!Object.values(topics).some(v=>v)) topics[b.dataset.k]=true;
-      b.setAttribute("aria-pressed",topics[b.dataset.k]); }));
+  let sky, CONS_FR={}, mode=null, diff="normal", score=0, streak=0, total=0, answered=false, best={};
+  const NOPT={easy:3,normal:4,hard:6};
+
+  function consOf(ra,dec){ try{ const c=window.Astronomy.Constellation(ra/15,dec);
+      return {sym:c.symbol, name: lang()==="en"?c.name:(CONS_FR[c.symbol]||c.name)}; }catch(e){ return null; } }
+
+  function labels(){ ["eyebrow","title","lede","back"].forEach(k=>{ const e=el("t-"+k); if(e)e.textContent=tt(k); });
+    el("next").textContent=tt("next"); buildModes(); buildDiff(); updScore(); }
+  function buildModes(){
+    const box=el("modes"), M=MODES[lang()]||MODES.fr;
+    box.innerHTML=Object.keys(M).map(k=>`<button class="mode" data-m="${k}">
+      <div class="ic">${M[k].ic}</div><h3>${M[k].t}</h3><p>${M[k].d}</p></button>`).join("");
+    box.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>start(b.dataset.m)));
+  }
+  function buildDiff(){
+    el("diffrow").innerHTML=`<span class="eyebrow">${tt("diff")}</span>`+
+      ["easy","normal","hard"].map(d=>`<button class="chip" data-d="${d}" aria-pressed="${diff===d}">${tt(d)}</button>`).join("");
+    el("diffrow").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ diff=b.dataset.d; buildDiff(); }));
+  }
+  function updScore(){
+    el("s-score").innerHTML=`${tt("score")} <b>${score}</b>`;
+    el("s-streak").innerHTML=`${tt("streak")} <b>${streak}</b>`;
+    el("s-total").textContent="/ "+total;
+    const b=best[mode]||0;
+    el("s-best").innerHTML=b?`${tt("best")} <b>${b}</b>`:"";
   }
 
-  // dessine une figure de constellation isolée (nord en haut)
+  function start(m){
+    mode=m; score=0; streak=0; total=0;
+    el("home").hidden=true; el("game").hidden=false;
+    el("modeName").textContent=(MODES[lang()]||MODES.fr)[m].t;
+    updScore(); ask();
+  }
+  el("back").addEventListener("click",()=>{ el("game").hidden=true; el("home").hidden=false; });
+
+  // figure de constellation isolée (Nord en haut, RA vers la gauche)
   function drawFig(c){
     const cv=el("fig"); cv.hidden=false;
     const dpr=Math.min(devicePixelRatio||1,2), W=cv.clientWidth, H=cv.clientHeight;
-    cv.width=W*dpr; cv.height=H*dpr; const x=cv.getContext("2d"); x.setTransform(dpr,0,0,dpr,0,0); x.clearRect(0,0,W,H);
-    let pts=[]; c.lines.forEach(seg=>seg.forEach(p=>pts.push(p.slice())));
-    let ras=pts.map(p=>p[0]); if(Math.max(...ras)-Math.min(...ras)>180) pts.forEach(p=>{ if(p[0]<180)p[0]+=360; });
+    if(!W) return;
+    cv.width=W*dpr; cv.height=H*dpr;
+    const x=cv.getContext("2d"); x.setTransform(dpr,0,0,dpr,0,0); x.clearRect(0,0,W,H);
+    const raw=[]; c.lines.forEach(seg=>seg.forEach(p=>raw.push(p[0])));
+    const wrap=(Math.max(...raw)-Math.min(...raw))>180;
+    const fix=p=>[ (wrap&&p[0]<180)?p[0]+360:p[0], p[1] ];
+    const pts=[]; c.lines.forEach(seg=>seg.forEach(p=>pts.push(fix(p))));
     const raA=pts.map(p=>p[0]), decA=pts.map(p=>p[1]);
     const raMin=Math.min(...raA),raMax=Math.max(...raA),decMin=Math.min(...decA),decMax=Math.max(...decA);
     const pad=26, sw=W-2*pad, sh=H-2*pad;
     const sx=(raMax-raMin)||1, sy=(decMax-decMin)||1, s=Math.min(sw/sx,sh/sy);
     const ox=pad+(sw-s*sx)/2, oy=pad+(sh-s*sy)/2;
-    const T=p=>[ox+(raMax-p[0])*s, oy+(decMax-p[1])*s]; // RA vers la gauche, Nord en haut
+    const T=p=>[ox+(raMax-p[0])*s, oy+(decMax-p[1])*s];
     const night=document.documentElement.getAttribute("data-theme")==="night";
-    x.strokeStyle=night?"#8a1f16":getComputedStyle(document.documentElement).getPropertyValue("--accent-2").trim()||"#6ea8ff";
+    x.strokeStyle=night?"#8a1f16":(getComputedStyle(document.documentElement).getPropertyValue("--accent-2").trim()||"#6ea8ff");
     x.lineWidth=1.6; x.globalAlpha=.85;
-    c.lines.forEach(seg=>{ x.beginPath(); seg.forEach((p0,i)=>{ let p=p0.slice(); if(p[0]<180&&Math.max(...ras)-Math.min(...ras)>180)p[0]+=360; const q=T(p); i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]); }); x.stroke(); });
+    c.lines.forEach(seg=>{ x.beginPath(); seg.forEach((p,i)=>{ const q=T(fix(p)); i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]); }); x.stroke(); });
     x.globalAlpha=1; x.fillStyle=night?"#ff5a49":"#fff";
     pts.forEach(p=>{ const q=T(p); x.beginPath(); x.arc(q[0],q[1],2.4,0,7); x.fill(); });
   }
 
+  function pool(){
+    // difficulté : facile = objets brillants et connus, difficile = tout le catalogue
+    if(diff==="easy") return sky.messier.filter(m=>m[4]!=null&&m[4]<=7);
+    if(diff==="normal") return sky.messier.filter(m=>m[4]!=null&&m[4]<=9);
+    return sky.messier;
+  }
+  function constPool(){
+    return diff==="hard" ? sky.consts.filter(c=>c.lines.length)
+                         : sky.consts.filter(c=>FAMOUS.includes(c.d)&&c.lines.length);
+  }
+
   function ask(){
-    answered=false; el("feedback").textContent=""; el("feedback").className="feedback"; el("next").hidden=true;
-    const active=Object.keys(topics).filter(k=>topics[k]);
-    if(!active.length){ el("prompt").textContent=tt("pickTopic"); el("opts").innerHTML=""; el("fig").hidden=true; return; }
-    const mode=rnd(active);
+    answered=false;
+    el("feedback").textContent=""; el("next").hidden=true; el("learn").hidden=true;
+    el("fig").hidden=true; el("qphoto").hidden=true; el("qphoto").innerHTML="";
+    const n=NOPT[diff];
+
     if(mode==="const"){
-      el("fig").hidden=false;
-      const pool=sky.consts.filter(c=>FAMOUS.includes(c.d)&&c.lines.length);
-      const correct=rnd(pool); drawFig(correct);
-      const others=shuffle(pool.filter(c=>c.d!==correct.d)).slice(0,3);
-      const opts=shuffle([correct,...others]);
+      const P=constPool(), correct=rnd(P);
+      drawFig(correct);
+      const opts=shuffle([correct,...shuffle(P.filter(c=>c.d!==correct.d)).slice(0,n-1)]);
       el("prompt").textContent=tt("qConst");
       renderOpts(opts.map(c=>({label:lang()==="en"?c.en:c.fr, ok:c.d===correct.d})), lang()==="en"?correct.en:correct.fr);
-    } else if(mode==="type"){
-      el("fig").hidden=true;
-      const correct=rnd(sky.messier); const disp=correct[0]+(correct[5]?" ("+correct[5]+")":"");
-      const allT=["GX","OC","GC","NE","PN","SR"]; const others=shuffle(allT.filter(t=>t!==correct[3])).slice(0,3);
-      const opts=shuffle([correct[3],...others]);
-      el("prompt").textContent=tt("qType")(disp);
-      renderOpts(opts.map(t=>({label:TYPE[t][lang()], ok:t===correct[3]})), TYPE[correct[3]][lang()]);
-    } else {
-      el("fig").hidden=true;
-      const named=sky.messier.filter(m=>m[5]); const correct=rnd(named);
-      const others=shuffle(named.filter(m=>m[0]!==correct[0])).slice(0,3);
+
+    } else if(mode==="photo"){
+      const P=pool().filter(m=>m[3]!=="OT"), correct=rnd(P);
+      el("prompt").textContent=tt("qPhoto");
+      const box=el("qphoto"); box.hidden=false;
+      box.innerHTML=`<div class="loading">${tt("loading")}</div>`;
+      const img=D.photoImg(correct[1],correct[2],{dim:correct[6],size:520,eager:true,alt:"",
+        onFail:()=>{ const l=box.querySelector(".loading"); if(l) l.textContent=tt("failed"); }});
+      img.addEventListener("load",()=>{ const l=box.querySelector(".loading"); if(l) l.remove(); });
+      box.appendChild(img);
+      // leurres du même type : on juge l'objet, pas la catégorie
+      let others=shuffle(P.filter(m=>m[0]!==correct[0]&&m[3]===correct[3])).slice(0,n-1);
+      if(others.length<n-1) others=others.concat(shuffle(P.filter(m=>m[0]!==correct[0]&&!others.includes(m))).slice(0,n-1-others.length));
       const opts=shuffle([correct,...others]);
+      renderOpts(opts.map(m=>({label:m[0]+(m[5]?" · "+m[5]:""), ok:m[0]===correct[0]})),
+        correct[0]+(correct[5]?" · "+correct[5]:""), correct[0]);
+
+    } else if(mode==="type"){
+      const correct=rnd(pool().filter(m=>m[3]!=="OT"));
+      const disp=correct[0]+(correct[5]?" ("+correct[5]+")":"");
+      const allT=["GX","OC","GC","NE","PN","SR"];
+      const opts=shuffle([correct[3],...shuffle(allT.filter(t=>t!==correct[3])).slice(0,n-1)]);
+      el("prompt").textContent=tt("qType")(disp);
+      renderOpts(opts.map(t=>({label:TYPE[t][lang()], ok:t===correct[3]})), TYPE[correct[3]][lang()], correct[0]);
+
+    } else if(mode==="name"){
+      const named=pool().filter(m=>m[5]);
+      const correct=rnd(named);
+      const opts=shuffle([correct,...shuffle(named.filter(m=>m[0]!==correct[0])).slice(0,n-1)]);
       el("prompt").textContent=tt("qName")(correct[5]);
-      renderOpts(opts.map(m=>({label:m[0], ok:m[0]===correct[0]})), correct[0]);
+      renderOpts(opts.map(m=>({label:m[0], ok:m[0]===correct[0]})), correct[0], correct[0]);
+
+    } else if(mode==="cons"){
+      const P=pool().filter(m=>consOf(m[1],m[2]));
+      const correct=rnd(P), cc=consOf(correct[1],correct[2]);
+      const disp=correct[0]+(correct[5]?" ("+correct[5]+")":"");
+      const others=shuffle(sky.consts.filter(c=>c.d!==cc.sym)).slice(0,n-1)
+        .map(c=>({name:lang()==="en"?c.en:c.fr}));
+      const opts=shuffle([{name:cc.name,ok:true},...others]);
+      el("prompt").textContent=tt("qCons")(disp);
+      renderOpts(opts.map(o=>({label:o.name, ok:!!o.ok})), cc.name, correct[0]);
     }
   }
-  function renderOpts(opts, correctLabel){
+  function renderOpts(opts, correctLabel, learnId){
     const box=el("opts"); box.innerHTML="";
     opts.forEach(o=>{ const b=document.createElement("button"); b.className="opt"; b.textContent=o.label;
-      b.addEventListener("click",()=>choose(b,o.ok,correctLabel,box)); box.appendChild(b); });
+      b.addEventListener("click",()=>choose(b,o.ok,correctLabel,box,learnId)); box.appendChild(b); });
   }
-  function choose(btn, ok, correctLabel, box){
+  function choose(btn, ok, correctLabel, box, learnId){
     if(answered) return; answered=true; total++;
     box.querySelectorAll("button").forEach(b=>b.disabled=true);
-    if(ok){ btn.classList.add("good"); score++; streak++; el("feedback").textContent=tt("good"); el("feedback").style.color="#4bd48e"; }
-    else { btn.classList.add("bad"); streak=0; el("feedback").textContent=tt("bad")(correctLabel); el("feedback").style.color="var(--danger)";
+    const fb=el("feedback");
+    if(ok){ btn.classList.add("good"); score++; streak++; fb.textContent=tt("good"); fb.style.color="#4bd48e"; }
+    else { btn.classList.add("bad"); streak=0; fb.textContent=tt("bad")(correctLabel); fb.style.color="var(--danger)";
       box.querySelectorAll("button").forEach(b=>{ if(b.textContent===correctLabel)b.classList.add("good"); }); }
-    updScore(); el("next").hidden=false;
+    if(score>(best[mode]||0)) best[mode]=score;
+    if(learnId){ const a=el("learn"); a.hidden=false; a.textContent=tt("learn");
+      a.href=`./messier.html?go=${encodeURIComponent(learnId)}`; }
+    updScore(); el("next").hidden=false; el("next").focus();
   }
   el("next").addEventListener("click",ask);
-  document.addEventListener("despina:lang",()=>{ labels(); ask(); });
+  document.addEventListener("despina:lang",()=>{ labels(); if(!el("game").hidden) ask(); });
 
-  fetch("./assets/data/sky.json").then(r=>r.json()).then(d=>{ sky=d; labels(); ask(); })
-    .catch(()=>{ el("prompt").textContent="Données indisponibles."; });
+  fetch("./assets/data/sky.json").then(r=>r.json()).then(d=>{
+    sky=d; CONS_FR=Object.fromEntries(d.consts.map(c=>[c.d,c.fr])); labels();
+  }).catch(()=>{ el("modes").innerHTML='<p class="note">Données indisponibles.</p>'; });
 });
 </script>
 </body>

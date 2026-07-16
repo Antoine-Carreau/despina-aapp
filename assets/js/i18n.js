@@ -8,11 +8,12 @@
   const T = {
     fr: {
       "nav.home":"Accueil","nav.solar":"Système solaire","nav.deepsky":"Ciel profond",
-      "nav.quiz":"Quiz","nav.observe":"Ce soir","nav.info":"Infos","nav.back":"← Retour à l'accueil",
+      "nav.messier":"Messier","nav.quiz":"Quiz","nav.observe":"Ce soir","nav.info":"Infos","nav.back":"← Retour à l'accueil",
       "home.eyebrow":"Plateforme d'exploration du ciel · sans inscription",
       "home.lede":"Explore le système solaire, promène-toi dans le ciel profond, teste-toi et découvre quoi observer ce soir depuis chez toi.",
       "home.solar.d":"Positions réelles du jour, planètes, lunes et diamètres apparents.",
       "home.deepsky.d":"Carte du ciel vectorielle (88 constellations, 110 Messier) + atlas Aladin. Horizon, Nord repéré, objets cliquables.",
+      "home.messier.d":"Les 110 objets de Messier en fiches, avec de vraies photos du ciel. Parcours-les un par un.",
       "home.quiz.d":"Retrouve un astre dans le ciel ou réponds en QCM. Tu choisis le thème.",
       "home.observe.d":"Coucher du Soleil, nuit noire, lever de Lune et cibles du moment.",
       "home.despina.h":"Despina, la lune qui donne son nom au projet",
@@ -41,11 +42,12 @@
     },
     en: {
       "nav.home":"Home","nav.solar":"Solar System","nav.deepsky":"Deep Sky",
-      "nav.quiz":"Quiz","nav.observe":"Tonight","nav.info":"About","nav.back":"← Back to home",
+      "nav.messier":"Messier","nav.quiz":"Quiz","nav.observe":"Tonight","nav.info":"About","nav.back":"← Back to home",
       "home.eyebrow":"Sky exploration platform · no sign-up",
       "home.lede":"Explore the Solar System, wander the deep sky, test yourself and find out what to observe tonight from where you are.",
       "home.solar.d":"Today's real positions, planets, moons and apparent sizes.",
       "home.deepsky.d":"Vector sky map (88 constellations, 110 Messier) + Aladin atlas. Horizon, marked North, clickable objects.",
+      "home.messier.d":"All 110 Messier objects as cards, with real sky photographs. Step through them one by one.",
       "home.quiz.d":"Locate an object in the sky or answer a quiz. You pick the topic.",
       "home.observe.d":"Sunset, astronomical night, moonrise and tonight's targets.",
       "home.despina.h":"Despina, the moon that names the project",

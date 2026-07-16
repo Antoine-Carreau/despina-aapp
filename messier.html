@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Les 110 objets de Messier, en photos | Despina</title>
+<meta name="theme-color" content="#0a0e1a">
+<meta name="description" content="Fiches d'apprentissage des 110 objets du catalogue Messier, avec de vraies photos du ciel (DSS2, 2MASS, WISE) : type, magnitude, taille, constellation.">
+<link rel="canonical" href="https://VOTRE-COMPTE.github.io/despina-aapp/messier.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Despina">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:url" content="https://VOTRE-COMPTE.github.io/despina-aapp/messier.html">
+<meta property="og:title" content="Les 110 objets de Messier, en photos | Despina">
+<meta property="og:description" content="Fiches d'apprentissage des 110 objets du catalogue Messier, avec de vraies photos du ciel (DSS2, 2MASS, WISE) : type, magnitude, taille, constellation.">
+<meta property="og:image" content="https://VOTRE-COMPTE.github.io/despina-aapp/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Despina — planétarium interactif">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Les 110 objets de Messier, en photos | Despina">
+<meta name="twitter:description" content="Fiches d'apprentissage des 110 objets du catalogue Messier, avec de vraies photos du ciel (DSS2, 2MASS, WISE) : type, magnitude, taille, constellation.">
+<meta name="twitter:image" content="https://VOTRE-COMPTE.github.io/despina-aapp/assets/img/og.png">
+<link rel="icon" href="./assets/img/icon.svg">
+<link rel="manifest" href="./manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/css/base.css">
+<script src="./assets/js/i18n.js"></script>
+<script src="./assets/js/theme.js"></script>
+<style>
+  .filters{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin:.8rem 0}
+  .filters .chip{cursor:pointer}
+  .filters .chip[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:transparent;font-weight:600}
+  .filters input{background:var(--surface);border:1px solid var(--line);border-radius:9px;color:var(--ink);
+    padding:.45rem .6rem;font-family:inherit;margin-left:auto;min-width:150px}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:.7rem;margin-top:.6rem}
+  .mcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;
+    cursor:pointer;text-align:left;padding:0;font-family:inherit;color:var(--ink);transition:border-color .15s,transform .15s}
+  .mcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .mcard .ph{position:relative;aspect-ratio:1/1;background:#05070f;display:block;overflow:hidden}
+  .mcard .ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .mcard .ph img.photo-fail{display:none}
+  .mcard .ph::after{content:attr(data-ph);position:absolute;inset:0;display:grid;place-items:center;
+    color:var(--faint);font:.7rem "Space Mono",monospace;z-index:-1}
+  .mcard .cap{padding:.4rem .5rem}
+  .mcard .cap b{font-family:"Space Mono",monospace;font-size:.86rem}
+  .mcard .cap span{display:block;color:var(--faint);font-size:.7rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mcard.seen{border-color:#4bd48e55}
+  .mcard.seen .cap b::after{content:" ✓";color:#4bd48e}
+
+  .detail{position:fixed;inset:0;z-index:60;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);display:grid;place-items:center;padding:1rem}
+  .detail[hidden]{display:none}
+  .dbox{background:var(--bg-2);border:1px solid var(--line);border-radius:18px;max-width:840px;width:100%;
+    max-height:92vh;overflow-y:auto;box-shadow:var(--shadow);position:relative}
+  .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  @media (max-width:760px){ .dgrid{grid-template-columns:1fr} }
+  .dphoto{position:relative;aspect-ratio:1/1;background:#05070f;overflow:hidden}
+  .dphoto img{width:100%;height:100%;object-fit:cover;display:block}
+  .dphoto .loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--faint);
+    font:.75rem "Space Mono",monospace;text-align:center;padding:1rem;pointer-events:none}
+  .dinfo{padding:1.2rem 1.3rem}
+  .dinfo h2{margin:.1rem 0 .1rem;font-size:1.6rem}
+  .dinfo .sub{color:var(--muted);font-family:"Space Mono",monospace;font-size:.82rem;margin-bottom:.7rem}
+  .dinfo table{width:100%;border-collapse:collapse;font-size:.88rem}
+  .dinfo td{padding:.35rem 0;border-bottom:1px dashed var(--line)}
+  .dinfo td:last-child{text-align:right;font-family:"Space Mono",monospace;color:var(--muted)}
+  .dnav{display:flex;gap:.5rem;align-items:center;padding:.8rem 1.3rem 1.2rem;flex-wrap:wrap}
+  .dnav .count{margin-left:auto;color:var(--faint);font:.76rem "Space Mono",monospace}
+  .dclose{position:absolute;top:.6rem;right:.6rem;z-index:2;background:var(--surface);border:1px solid var(--line);
+    color:var(--ink);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:.9rem}
+  .surveypick{display:flex;gap:.3rem;flex-wrap:wrap;margin:.6rem 0 0}
+  .surveypick button{font-size:.72rem;padding:.25rem .5rem}
+  .surveypick button[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:transparent}
+  .note{color:var(--faint);font-size:.76rem;line-height:1.5}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.6</span></span>
+  <nav class="nav">
+    <a href="./index.html" data-i18n="nav.home">Accueil</a>
+    <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
+    <a href="./deepsky.html" data-i18n="nav.deepsky">Ciel profond</a>
+    <a href="./messier.html" class="active" data-i18n="nav.messier">Messier</a>
+    <a href="./quiz.html" data-i18n="nav.quiz">Quiz</a>
+    <a href="./observe.html" data-i18n="nav.observe">Ce soir</a>
+    <a href="./info.html" data-i18n="nav.info">Infos</a>
+  </nav>
+  <span data-lang-switch></span><span data-theme-switch></span>
+</header>
+
+<main class="wrap">
+  <p class="eyebrow" id="t-eyebrow">Catalogue Messier · fiches d'apprentissage</p>
+  <h1 id="t-title">Les 110 objets de Messier</h1>
+  <p class="note" id="t-lede"></p>
+
+  <div class="filters" id="filters"></div>
+  <div class="mgrid" id="grid"></div>
+  <p class="note" id="t-src" style="text-align:center;margin-top:1.6rem"></p>
+</main>
+
+<div class="detail" id="detail" hidden>
+  <div class="dbox">
+    <button class="dclose" id="dclose" aria-label="Fermer">✕</button>
+    <div class="dgrid">
+      <div class="dphoto" id="dphoto"></div>
+      <div class="dinfo" id="dinfo"></div>
+    </div>
+    <div class="dnav">
+      <button class="btn" id="prev">← <span id="t-prev">Précédent</span></button>
+      <button class="btn primary" id="nextb"><span id="t-next">Suivant</span> →</button>
+      <a class="btn" id="onmap" href="./deepsky.html"><span id="t-onmap">Sur la carte</span></a>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+</div>
+
+<script defer src="./assets/vendor/astronomy.browser.min.js"></script>
+<script defer src="./assets/js/skyphoto.js"></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",()=>{
+  const D=window.Despina, lang=()=>D.getLang?D.getLang():"fr";
+  const TT={fr:{eyebrow:"Catalogue Messier · fiches d'apprentissage",title:"Les 110 objets de Messier",
+      lede:"Charles Messier a dressé cette liste entre 1774 et 1781 pour recenser les objets diffus à ne pas confondre avec des comètes. Clique une vignette pour ouvrir la fiche, ou parcours-les une à une. Les images sont de véritables clichés du ciel (relevés DSS2, 2MASS, WISE) découpés à la demande.",
+      src:"Images : hips2fits / CDS Strasbourg (relevés HiPS). Données : catalogue Messier (d3-celestial), constellations via astronomy-engine (frontières UAI).",
+      all:"Tous",prev:"Précédent",next:"Suivant",onmap:"Sur la carte",search:"Chercher (M31, Orion…)",
+      type:"Type",mag:"Magnitude",size:"Taille apparente",cons:"Constellation",ngc:"Autre nom",morph:"Morphologie",coords:"Coordonnées (J2000)",
+      loading:"Chargement de l'image…",failed:"Image indisponible (service CDS injoignable).",
+      survey:"Relevé",none:"Aucun objet ne correspond.",seen:"vues"},
+    en:{eyebrow:"Messier catalogue · learning cards",title:"The 110 Messier objects",
+      lede:"Charles Messier compiled this list between 1774 and 1781 to catalogue fuzzy objects not to be mistaken for comets. Click a thumbnail to open the card, or step through them one by one. Images are real sky photographs (DSS2, 2MASS, WISE surveys) cut out on demand.",
+      src:"Images: hips2fits / CDS Strasbourg (HiPS surveys). Data: Messier catalogue (d3-celestial), constellations via astronomy-engine (IAU boundaries).",
+      all:"All",prev:"Previous",next:"Next",onmap:"On the map",search:"Search (M31, Orion…)",
+      type:"Type",mag:"Magnitude",size:"Apparent size",cons:"Constellation",ngc:"Other name",morph:"Morphology",coords:"Coordinates (J2000)",
+      loading:"Loading image…",failed:"Image unavailable (CDS service unreachable).",
+      survey:"Survey",none:"No object matches.",seen:"seen"}};
+  const tt=k=>(TT[lang()]||TT.fr)[k];
+  const TYPE={GX:{fr:"Galaxie",en:"Galaxy"},OC:{fr:"Amas ouvert",en:"Open cluster"},GC:{fr:"Amas globulaire",en:"Globular cluster"},
+    NE:{fr:"Nébuleuse",en:"Nebula"},PN:{fr:"Nébuleuse planétaire",en:"Planetary nebula"},
+    SR:{fr:"Rémanent de supernova",en:"Supernova remnant"},OT:{fr:"Astérisme / autre",en:"Asterism / other"}};
+  const CONS_FR={};
+
+  let M=[], view=[], cur=0, filter="all", survey="CDS/P/DSS2/color";
+  const seen=new Set();
+  const el=id=>document.getElementById(id);
+
+  function labels(){ ["eyebrow","title","lede","src","prev","next","onmap"].forEach(k=>{
+      const e=el("t-"+k); if(e) e.textContent=tt(k); }); }
+
+  function consName(ra,dec){
+    try{ const c=window.Astronomy.Constellation(ra/15,dec);
+      return (lang()==="en") ? c.name : (CONS_FR[c.symbol]||c.name);
+    }catch(e){ return "—"; }
+  }
+  function fmtRa(ra){ const h=ra/15, hh=Math.floor(h), mm=Math.floor((h-hh)*60), ss=Math.round((((h-hh)*60)-mm)*60);
+    return `${hh}h ${String(mm).padStart(2,"0")}m ${String(ss).padStart(2,"0")}s`; }
+  function fmtDec(d){ const s=d<0?"−":"+", a=Math.abs(d), dd=Math.floor(a), mm=Math.round((a-dd)*60);
+    return `${s}${dd}° ${String(mm).padStart(2,"0")}′`; }
+
+  function buildFilters(){
+    const box=el("filters");
+    const counts={}; M.forEach(m=>counts[m[3]]=(counts[m[3]]||0)+1);
+    const keys=["all",...Object.keys(TYPE).filter(k=>counts[k])];
+    box.innerHTML=keys.map(k=>{
+      const lbl = k==="all" ? `${tt("all")} (${M.length})` : `${TYPE[k][lang()]} (${counts[k]})`;
+      return `<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${lbl}</button>`;
+    }).join("") + `<input type="search" id="q" placeholder="${tt("search")}" aria-label="${tt("search")}">`;
+    box.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ filter=b.dataset.f; buildFilters(); render(); }));
+    const q=el("q"); if(q){ q.value=search; q.addEventListener("input",e=>{ search=e.target.value.trim().toLowerCase(); render(); }); }
+  }
+  let search="";
+
+  function match(m){
+    if(filter!=="all" && m[3]!==filter) return false;
+    if(!search) return true;
+    const hay=(m[0]+" "+(m[5]||"")+" "+(m[8]||"")+" "+consName(m[1],m[2])).toLowerCase();
+    return hay.includes(search);
+  }
+  function render(){
+    view=M.filter(match);
+    const g=el("grid");
+    if(!view.length){ g.innerHTML=`<p class="note">${tt("none")}</p>`; return; }
+    g.innerHTML="";
+    view.forEach((m,i)=>{
+      const b=document.createElement("button");
+      b.className="mcard"+(seen.has(m[0])?" seen":"");
+      b.innerHTML=`<span class="ph" data-ph="${m[0]}"></span>
+        <span class="cap"><b>${m[0]}</b><span>${m[5]||TYPE[m[3]][lang()]}</span></span>`;
+      const ph=b.querySelector(".ph");
+      const img=D.photoImg(m[1],m[2],{dim:m[6],size:200,survey,alt:m[0]});
+      ph.appendChild(img);
+      b.addEventListener("click",()=>open(i));
+      g.appendChild(b);
+    });
+  }
+
+  function open(i){
+    cur=i; const m=view[cur]; if(!m) return;
+    seen.add(m[0]);
+    el("detail").hidden=false; document.body.style.overflow="hidden";
+    const ph=el("dphoto");
+    ph.innerHTML=`<div class="loading">${tt("loading")}</div>`;
+    const img=D.photoImg(m[1],m[2],{dim:m[6],size:600,survey,eager:true,alt:m[0],
+      onFail:()=>{ ph.querySelector(".loading").textContent=tt("failed"); }});
+    img.addEventListener("load",()=>{ const l=ph.querySelector(".loading"); if(l) l.remove(); });
+    ph.appendChild(img);
+    el("dinfo").innerHTML=`
+      <h2>${m[0]}${m[5]?` · <span style="font-size:1.1rem;color:var(--muted)">${m[5]}</span>`:""}</h2>
+      <div class="sub">${TYPE[m[3]][lang()]}</div>
+      <table>
+        <tr><td>${tt("cons")}</td><td>${consName(m[1],m[2])}</td></tr>
+        <tr><td>${tt("mag")}</td><td>${m[4]!=null?m[4]:"—"}</td></tr>
+        <tr><td>${tt("size")}</td><td>${m[6]?m[6]+"′":"—"}</td></tr>
+        ${m[8]?`<tr><td>${tt("ngc")}</td><td>${m[8]}</td></tr>`:""}
+        ${m[7]?`<tr><td>${tt("morph")}</td><td>${m[7]}</td></tr>`:""}
+        <tr><td>${tt("coords")}</td><td>${fmtRa(m[1])} / ${fmtDec(m[2])}</td></tr>
+      </table>
+      <div class="surveypick">${D.SURVEYS.map(s=>`<button class="btn" data-s="${s.id}" aria-pressed="${s.id===survey}">${s[lang()]}</button>`).join("")}</div>`;
+    el("dinfo").querySelectorAll("[data-s]").forEach(b=>b.addEventListener("click",()=>{ survey=b.dataset.s; open(cur); render(); }));
+    el("count").textContent=`${cur+1} / ${view.length} · ${seen.size} ${tt("seen")}`;
+    el("onmap").href=`./deepsky.html?go=${encodeURIComponent(m[0])}`;
+    el("prev").disabled = cur<=0; el("nextb").disabled = cur>=view.length-1;
+  }
+  function close(){ el("detail").hidden=true; document.body.style.overflow=""; render(); }
+  el("dclose").addEventListener("click",close);
+  el("detail").addEventListener("click",e=>{ if(e.target===el("detail")) close(); });
+  el("prev").addEventListener("click",()=>open(cur-1));
+  el("nextb").addEventListener("click",()=>open(cur+1));
+  document.addEventListener("keydown",e=>{
+    if(el("detail").hidden) return;
+    if(e.key==="Escape") close();
+    if(e.key==="ArrowLeft"&&cur>0) open(cur-1);
+    if(e.key==="ArrowRight"&&cur<view.length-1) open(cur+1);
+  });
+  document.addEventListener("despina:lang",()=>{ labels(); buildFilters(); render(); if(!el("detail").hidden) open(cur); });
+
+  fetch("./assets/data/sky.json").then(r=>r.json()).then(d=>{
+    Object.assign(CONS_FR, Object.fromEntries(d.consts.map(c=>[c.d,c.fr])));
+    M=d.messier; labels(); buildFilters(); render();
+    const go=new URLSearchParams(location.search).get("go");
+    if(go){ const i=view.findIndex(m=>m[0].toLowerCase()===go.toLowerCase()); if(i>=0) open(i); }
+  }).catch(()=>{ el("grid").innerHTML='<p class="note">Données indisponibles.</p>'; });
+});
+</script>
+</body>
+</html>

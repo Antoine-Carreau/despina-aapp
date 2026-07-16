@@ -3,9 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Despina — apprendre le ciel</title>
+<title>Despina — planétarium interactif</title>
 <meta name="description" content="Despina : plateforme interactive d'astronomie — système solaire, ciel profond, quiz et quoi observer ce soir. Sans inscription.">
 <meta name="theme-color" content="#0a0e1a">
+<meta name="description" content="Carte du ciel, système solaire, catalogue Messier et quiz. Positions réelles calculées dans le navigateur, sans compte ni traceur. Fonctionne hors-ligne.">
+<link rel="canonical" href="https://VOTRE-COMPTE.github.io/despina-aapp/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Despina">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:url" content="https://VOTRE-COMPTE.github.io/despina-aapp/">
+<meta property="og:title" content="Despina — planétarium interactif">
+<meta property="og:description" content="Carte du ciel, système solaire, catalogue Messier et quiz. Positions réelles calculées dans le navigateur, sans compte ni traceur. Fonctionne hors-ligne.">
+<meta property="og:image" content="https://VOTRE-COMPTE.github.io/despina-aapp/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Despina — planétarium interactif">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Despina — planétarium interactif">
+<meta name="twitter:description" content="Carte du ciel, système solaire, catalogue Messier et quiz. Positions réelles calculées dans le navigateur, sans compte ni traceur. Fonctionne hors-ligne.">
+<meta name="twitter:image" content="https://VOTRE-COMPTE.github.io/despina-aapp/assets/img/og.png">
 <link rel="icon" href="./assets/img/icon.svg">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./assets/img/icon.svg">
@@ -40,11 +57,12 @@
 <body>
 <a href="#main" class="skip" data-i18n="nav.home">Accueil</a>
 <header class="topbar">
-  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.4</span></span>
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.6</span></span>
   <nav class="nav">
     <a href="./index.html" class="active" data-i18n="nav.home">Accueil</a>
     <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
     <a href="./deepsky.html" data-i18n="nav.deepsky">Ciel profond</a>
+    <a href="./messier.html" data-i18n="nav.messier">Messier</a>
     <a href="./quiz.html" data-i18n="nav.quiz">Quiz</a>
     <a href="./observe.html" data-i18n="nav.observe">Ce soir</a>
     <a href="./info.html" data-i18n="nav.info">Infos</a>
@@ -100,6 +118,8 @@
         <h3 data-i18n="nav.solar">Système solaire</h3><p data-i18n="home.solar.d"></p></a>
       <a class="tile" href="./deepsky.html"><span class="go">→</span><div class="ic">✦</div>
         <h3 data-i18n="nav.deepsky">Ciel profond</h3><p data-i18n="home.deepsky.d"></p></a>
+      <a class="tile" href="./messier.html"><span class="go">→</span><div class="ic">◍</div>
+        <h3 data-i18n="nav.messier">Messier</h3><p data-i18n="home.messier.d"></p></a>
       <a class="tile" href="./quiz.html"><span class="go">→</span><div class="ic">◎</div>
         <h3 data-i18n="nav.quiz">Quiz</h3><p data-i18n="home.quiz.d"></p></a>
       <a class="tile" href="./observe.html"><span class="go">→</span><div class="ic">🌙</div>
