@@ -69,7 +69,7 @@
 </head>
 <body>
 <header class="topbar">
-  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.6</span></span>
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.7</span></span>
   <nav class="nav">
     <a href="./index.html" data-i18n="nav.home">Accueil</a>
     <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
@@ -249,7 +249,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       drawFig(correct);
       const opts=shuffle([correct,...shuffle(P.filter(c=>c.d!==correct.d)).slice(0,n-1)]);
       el("prompt").textContent=tt("qConst");
-      renderOpts(opts.map(c=>({label:lang()==="en"?c.en:c.fr, ok:c.d===correct.d})), lang()==="en"?correct.en:correct.fr);
+      renderOpts(opts.map(c=>({label:lang()==="en"?c.la:c.fr, ok:c.d===correct.d})), lang()==="en"?correct.la:correct.fr);
 
     } else if(mode==="photo"){
       const P=pool().filter(m=>m[3]!=="OT"), correct=rnd(P);
@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       const correct=rnd(P), cc=consOf(correct[1],correct[2]);
       const disp=correct[0]+(correct[5]?" ("+correct[5]+")":"");
       const others=shuffle(sky.consts.filter(c=>c.d!==cc.sym)).slice(0,n-1)
-        .map(c=>({name:lang()==="en"?c.en:c.fr}));
+        .map(c=>({name:lang()==="en"?c.la:c.fr}));
       const opts=shuffle([{name:cc.name,ok:true},...others]);
       el("prompt").textContent=tt("qCons")(disp);
       renderOpts(opts.map(o=>({label:o.name, ok:!!o.ok})), cc.name, correct[0]);

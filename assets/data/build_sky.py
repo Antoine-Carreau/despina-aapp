@@ -95,12 +95,21 @@ for f in j("stars.6.json")["features"]:
 # ---- constellations (lignes + noms, alignés par index) ----
 names = j("constellations.json")["features"]
 lines = j("constellations.lines.json")["features"]
+# Attention : dans d3-celestial, "name" est le nom UAI officiel (Ursa Major, Bootes)
+# tandis que "en" est le nom vernaculaire (Big Dipper, Herdsman) et "la" une graphie
+# latine médiévale (Ursa Maior). L'étiquette anglaise d'une constellation est le nom
+# UAI ; le vernaculaire n'est gardé que pour la recherche.
+NBSP = "\u2005"
+clean = lambda x: (x or "").replace(NBSP, " ").strip()
+IAU_FIX = {"Ser": "Serpens"}          # les deux moitiés (Caput/Cauda) sont fusionnées
 lbd = {}
 for i in range(len(lines)):
     p = names[i]["properties"]; d = p["desig"]
     pt = names[i]["geometry"]["coordinates"]
-    e = lbd.setdefault(d, {"d": d, "en": p.get("en") or p["name"], "fr": FR.get(d, p.get("en") or p["name"]),
-                           "gen": p.get("gen", ""), "pt": [ra360(pt[0]), r3(pt[1])], "lines": []})
+    iau = IAU_FIX.get(d, clean(p.get("name")))
+    e = lbd.setdefault(d, {"d": d, "la": iau, "en": clean(p.get("en")) or iau,
+                           "fr": FR.get(d, iau), "gen": clean(p.get("gen")),
+                           "pt": [ra360(pt[0]), r3(pt[1])], "lines": []})
     e["lines"].extend([[[ra360(a), r3(b)] for a, b in seg] for seg in lines[i]["geometry"]["coordinates"]])
 consts = list(lbd.values())
 

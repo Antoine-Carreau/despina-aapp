@@ -45,7 +45,7 @@
 </head>
 <body>
 <header class="topbar">
-  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.6</span></span>
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.7</span></span>
   <nav class="nav">
     <a href="./index.html" data-i18n="nav.home">Accueil</a>
     <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     // mini carte
     if(mini){ mini.setLocation(loc.lat,loc.lon,loc.name); mini.setDate(duskDate); }
     else if(sky){ mini=D.SkyMap(document.getElementById("mini"),{data:sky,location:loc,date:duskDate,
-      interactive:false, layers:{labels:false,grid:true}, onSelect:()=>{}}); }
+      projection:"allsky", interactive:false, layers:{labels:false,grid:true,atmosphere:false}, onSelect:()=>{}}); }
   }
 
   fetch("./assets/data/sky.json").then(r=>r.json()).then(d=>{sky=d;compute();}).catch(()=>compute());

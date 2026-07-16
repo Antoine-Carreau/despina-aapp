@@ -42,7 +42,7 @@
 <body>
 <a href="#main" class="skip" data-i18n="nav.home">Accueil</a>
 <header class="topbar">
-  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.6</span></span>
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.7</span></span>
   <nav class="nav">
     <a href="./index.html" data-i18n="nav.home">Accueil</a>
     <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
@@ -56,7 +56,7 @@
 </header>
 
 <main id="main" class="wrap prose">
-  <p class="eyebrow">Despina · v0.6 · note de suivi</p>
+  <p class="eyebrow">Despina · v0.7 · note de suivi</p>
   <h1>Infos, sources &amp; feuille de route</h1>
   <p style="color:var(--muted)"><b>Despina</b> — <i>Demonstrative Exploration Sky Platform for Interactive Navigation and Astronomy</i>.
   Site statique pour apprendre et enseigner l'astronomie (grand public, amateurs, pros). Nommé d'après Despina, lune-berger de l'anneau Le Verrier de Neptune.
@@ -65,6 +65,7 @@
   <h2>Version courante</h2>
   <table>
     <tr><th>Version</th><th>Date</th><th>Contenu</th></tr>
+    <tr><td>0.7</td><td>2026-07</td><td><b>La carte adopte le fonctionnement de Stellarium.</b> Nouvelle projection par défaut : <b>vue à la première personne</b> vers l'horizon (stéréographique, comme le réglage par défaut de Stellarium) — on <b>tourne la tête</b> en glissant, la <b>molette change le champ de vue</b> (180° → 0,5°), le <b>sol</b> est sous nos pieds et les cardinaux sont posés sur la ligne d'horizon. Aucun roulis : l'horizon reste horizontal. <b>Atmosphère</b> : la couleur du ciel suit la hauteur du Soleil (jour bleu, teinte chaude au couchant, nuit noire) et les étoiles s'effacent au lever du jour ; halo solaire. <b>Écoulement du temps</b> : lecture/pause et vitesses ×1 → 1 jour/s, en avant comme en arrière, ⏮/⏭ à l'heure, retour à « maintenant ». <b>Barre d'état</b> (champ, direction du regard, date, hauteur du Soleil, lieu). <b>Lune dessinée avec sa phase</b>, limbe éclairé tourné vers le Soleil. <b>Fiche enrichie</b> : hauteur, azimut, RA/Dec, altitude de culmination, mention circumpolaire. Clavier : <code>←↑→↓</code>, <code>+</code>/<code>−</code>, <code>Espace</code>. La vue <b>tout-le-ciel</b> reste disponible d'un bouton (et reste la vue de « Ce soir »). <b>Correction de données</b> : les noms anglais de constellations venaient du champ vernaculaire — la Grande Ourse s'affichait « Big Dipper » (qui est un astérisme, pas la constellation), le Cygne « Swan ». Les étiquettes utilisent désormais les <b>noms UAI</b> (Ursa Major, Cygnus, Boötes) ; la recherche accepte le sigle, le nom UAI, le vernaculaire et le français.</td></tr>
     <tr><td>0.6</td><td>2026-07</td><td><b>Mode hors-ligne</b> : moteur d'éphémérides <b>embarqué</b> (astronomy-engine 2.1.19, MIT — plus aucun CDN pour le calcul) et service worker qui met en cache pages, styles, scripts et catalogue (≈ 400 Ko). L'appli s'ouvre et calcule <b>sans réseau</b> ; un témoin « hors-ligne » apparaît dans la barre. <b>Curseur de date</b> sur la carte : saisie directe, sauts ±1 j / ±30 j, retour à « maintenant ». <b>Photo</b> de l'objet directement dans la fiche de la carte. <b>Référencement</b> : titres et descriptions par page, Open Graph + Twitter Card avec image sociale 1200×630, canonical, <code>sitemap.xml</code>, <code>robots.txt</code>.</td></tr>
     <tr><td>0.5</td><td>2026-07</td><td><b>Correctif mobile</b> : la barre de nav (6 liens qui passaient à la ligne dans un bandeau collant) occupait tout l'écran sans pouvoir être refermée → menu <b>hamburger</b> qui se ferme de six façons (bouton, lien, extérieur, Échap, redimensionnement). <b>Navigation dans la carte</b> : glisser pour se déplacer, molette/pincement/boutons pour zoomer (×1 à ×10), bouton « vue entière » ; le repère horizon/Nord reste fixe (loupe, aucune rotation). Réglages en <b>tiroir</b> sur téléphone. <b>+1312 objets NGC/IC</b> (magnitude ≤ 12) en calque progressif, avec recherche par nom. Nouvelle page <b>Messier</b> : les 110 objets en fiches d'apprentissage avec de <b>vraies photos</b> (hips2fits/CDS), filtres, recherche, navigation une à une, suivi des fiches vues. <b>Quiz refondu</b> : on choisit <b>un</b> mode (fini le mélange) parmi 5 — dont un mode <b>photo</b> — plus 3 difficultés et un lien direct vers la fiche. <b>Correction de données</b> : 40 galaxies Messier (dont M31) étaient typées « nébuleuse » ; M45 est un amas ouvert. Constellation de chaque objet via les frontières UAI.</td></tr>
     <tr><td>0.4</td><td>2026-07</td><td><b>Carte du ciel vectorielle</b> (style Stellarium) : vue tout-le-ciel ancrée à l'horizon — zénith au centre, horizon = cercle, Nord en haut (jamais « tête en bas ») ; <b>88 constellations</b> et <b>110 objets Messier</b> (open data), étoiles jusqu'à magnitude 6, planètes, Lune et Soleil calculés ; constellations et objets <b>cliquables</b> (fiches) ; lieu (géolocalisation / ville) et heure (curseur ±12 h, « live ») ; choix <b>Carte vectorielle</b> ou <b>Atlas Aladin</b>. Page <b>Ce soir</b> (coucher du Soleil, nuit noire, Lune, planètes et Messier bien placés). Page <b>Quiz</b> (reconnaître une constellation à sa figure, type et nom d'objets Messier).</td></tr>
@@ -131,7 +132,12 @@
     <tr><td>Lieu (géoloc/ville) + heure (curseur, live)</td><td class="done">fait</td><td>0.4</td></tr>
     <tr><td>Choix Carte vectorielle / Atlas Aladin (Lite v3)</td><td class="done">fait</td><td>0.4</td></tr>
     <tr><td>Fonds de ciel Aladin : Voie lactée, DSS2, 2MASS</td><td class="done">fait</td><td>0.3–0.4</td></tr>
-    <tr><td><b>Déplacement &amp; zoom</b> (glisser, molette, pincement, ×1→×10) sur repère fixe</td><td class="done">fait</td><td>0.5</td></tr>
+    <tr><td><b>Vue à la première personne</b> façon Stellarium (regard, champ de vue, sol)</td><td class="done">fait</td><td>0.7</td></tr>
+    <tr><td><b>Atmosphère</b> (couleur du ciel selon le Soleil) + Lune avec sa phase</td><td class="done">fait</td><td>0.7</td></tr>
+    <tr><td><b>Écoulement du temps</b> (lecture/pause, ×1 → 1 j/s, avant/arrière)</td><td class="done">fait</td><td>0.7</td></tr>
+    <tr><td>Barre d'état + fiche avec hauteur, azimut, RA/Dec, culmination</td><td class="done">fait</td><td>0.7</td></tr>
+    <tr><td>Noms de constellations UAI (correction du vernaculaire)</td><td class="done">fait</td><td>0.7</td></tr>
+    <tr><td>Déplacement &amp; zoom sur repère fixe</td><td class="done">fait</td><td>0.5</td></tr>
     <tr><td><b>Calque NGC/IC</b> : 1312 objets (mag≤12), seuil progressif selon le zoom</td><td class="done">fait</td><td>0.5</td></tr>
     <tr><td>Recherche d'objet (Messier, NGC/IC, constellation) + centrage</td><td class="done">fait</td><td>0.5</td></tr>
     <tr><td>Réglages en tiroir sur téléphone</td><td class="done">fait</td><td>0.5</td></tr>

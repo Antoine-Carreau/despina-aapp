@@ -20,7 +20,7 @@
 <meta property="og:image:alt" content="Despina — planétarium interactif">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ciel profond — carte du ciel interactive | Despina">
-<meta name="twitter:description" content="Carte du ciel vectorielle ancrée à l'horizon : 88 constellations, 110 objets Messier et 1300+ NGC/IC. Déplacement, zoom, choix du lieu, de la date et de l'heure.">
+<meta name="twitter:description" content="Carte du ciel vectorielle ancrée à l'horizon : 88 constellations, 110 objets Messier et 1300+ NGC/IC.">
 <meta name="twitter:image" content="https://VOTRE-COMPTE.github.io/despina-aapp/assets/img/og.png">
 <link rel="icon" href="./assets/img/icon.svg">
 <link rel="manifest" href="./manifest.json">
@@ -33,26 +33,40 @@
     align-items:center;flex-wrap:wrap}
   .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
   .seg button{background:transparent;border:0;color:var(--muted);padding:.35rem .8rem;font-family:inherit;
-    cursor:pointer;font-size:.85rem}
+    cursor:pointer;font-size:.85rem;white-space:nowrap}
   .seg button[aria-pressed="true"]{background:var(--accent);color:var(--bg);font-weight:600}
   .modebar .loc{margin-left:auto;color:var(--faint);font-size:.78rem;font-family:"Space Mono",monospace;
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45%}
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:42%}
   .panel-btn{display:none}
 
-  .sky-layout{display:grid;grid-template-columns:290px 1fr;height:calc(100dvh - 108px)}
+  .sky-layout{display:grid;grid-template-columns:292px 1fr;height:calc(100dvh - 108px)}
   .panel{border-right:1px solid var(--line);padding:1rem;overflow-y:auto;background:var(--bg-2)}
   .grp{margin:1rem 0 .35rem;font:600 .7rem "Space Mono",monospace;text-transform:uppercase;
     letter-spacing:.08em;color:var(--accent)}
   .row{display:flex;gap:.4rem;align-items:center;margin:.35rem 0}
-  .row input[type=text],.row input[type=search]{flex:1;min-width:0;background:var(--surface);border:1px solid var(--line);
-    border-radius:9px;color:var(--ink);padding:.45rem .55rem;font-family:inherit}
-  .row input[type=range]{flex:1}
+  .row input[type=text],.row input[type=search],.row input[type=date],.row input[type=time]{
+    flex:1;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:9px;
+    color:var(--ink);padding:.45rem .55rem;font-family:inherit;font-size:.85rem}
   .toggle{display:flex;align-items:center;gap:.5rem;margin:.3rem 0;font-size:.88rem;cursor:pointer}
   .toggle .sw{width:9px;height:9px;border-radius:2px;flex:none}
   .hint{color:var(--faint);font-size:.75rem;margin:.5rem 0 0;line-height:1.45}
+  .hint kbd{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:0 .25rem;
+    font-family:"Space Mono",monospace;font-size:.9em}
+
+  /* barre d'écoulement du temps, à la Stellarium */
+  .flow{display:flex;gap:.25rem;align-items:center;margin:.4rem 0}
+  .flow button{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--ink);
+    cursor:pointer;font-size:.85rem;padding:.35rem 0;font-family:inherit}
+  .flow button:hover{border-color:var(--accent)}
+  .flow button.on{background:var(--accent);color:var(--bg);border-color:transparent}
+  .rate{font:.72rem "Space Mono",monospace;color:var(--faint);text-align:center;margin:.1rem 0 0}
+
   .fiche{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.7rem .8rem;margin-top:.6rem;font-size:.9rem}
   .fiche h3{margin:0 0 .2rem;font-size:1.02rem}
   .fiche .mono{color:var(--muted);font-size:.78rem;font-family:"Space Mono",monospace}
+  .fiche table{width:100%;border-collapse:collapse;font-size:.76rem;margin-top:.45rem}
+  .fiche td{padding:.18rem 0;border-bottom:1px dashed var(--line);color:var(--faint)}
+  .fiche td:last-child{text-align:right;font-family:"Space Mono",monospace;color:var(--muted)}
   .fiche .acts{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.5rem}
   .fiche .acts .btn{font-size:.76rem;padding:.3rem .55rem}
   .fiche .fphoto{position:relative;margin:.5rem 0;border-radius:9px;overflow:hidden;background:#05070f;aspect-ratio:1/1}
@@ -60,13 +74,19 @@
   .fiche .fphoto .ld{position:absolute;inset:0;display:grid;place-items:center;color:var(--faint);
     font:.7rem "Space Mono",monospace}
 
-  #skywrap{position:relative;display:grid;place-items:center;padding:.4rem;min-width:0}
-  #skymap{width:100%;height:100%;display:block}
-  .zoombar{position:absolute;right:.7rem;bottom:.7rem;display:flex;flex-direction:column;gap:.3rem;z-index:5}
-  .zoombar button{width:34px;height:34px;border-radius:9px;background:color-mix(in srgb,var(--surface) 85%,transparent);
+  #skywrap{position:relative;min-width:0;overflow:hidden}
+  #skymap{width:100%;height:100%;display:block;outline:none}
+  .zoombar{position:absolute;right:.7rem;bottom:2.2rem;display:flex;flex-direction:column;gap:.3rem;z-index:5}
+  .zoombar button{width:34px;height:34px;border-radius:9px;background:color-mix(in srgb,var(--surface) 82%,transparent);
     border:1px solid var(--line);color:var(--ink);cursor:pointer;font-size:1rem;line-height:1;
     backdrop-filter:blur(6px);font-family:inherit}
   .zoombar button:hover{border-color:var(--accent)}
+  /* barre d'état, comme le bandeau bas de Stellarium */
+  .statusbar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:.9rem;padding:.28rem .7rem;
+    background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(6px);
+    border-top:1px solid var(--line);font:.68rem "Space Mono",monospace;color:var(--faint);
+    overflow-x:auto;white-space:nowrap;z-index:4}
+  .statusbar b{color:var(--muted);font-weight:400}
 
   #view-aladin{height:calc(100dvh - 108px)}
   #aladin-lite-div{width:100%;height:100%}
@@ -75,11 +95,10 @@
     border-radius:9px;color:var(--ink);padding:.45rem .55rem;font-family:inherit}
   .al-controls .btn{font-size:.78rem}
 
-  /* ----- Téléphone : le panneau devient un tiroir qu'on ouvre/ferme ----- */
   @media (max-width:860px){
     .panel-btn{display:inline-flex;align-items:center;gap:.3rem;font-size:.82rem;padding:.35rem .7rem}
     .sky-layout{grid-template-columns:1fr;height:auto}
-    #skywrap{height:min(86vw,68dvh);padding:.2rem}
+    #skywrap{height:min(92vw,66dvh)}
     .panel{position:fixed;z-index:50;left:0;right:0;bottom:0;max-height:74dvh;border-right:0;
       border-top:1px solid var(--line);border-radius:16px 16px 0 0;box-shadow:var(--shadow);
       transform:translateY(101%);transition:transform .25s ease;padding:.9rem 1rem 1.4rem}
@@ -95,7 +114,7 @@
 </head>
 <body>
 <header class="topbar">
-  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.6</span></span>
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.7</span></span>
   <nav class="nav">
     <a href="./index.html" data-i18n="nav.home">Accueil</a>
     <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
@@ -109,6 +128,10 @@
 </header>
 
 <div class="modebar">
+  <span class="seg" id="proj">
+    <button data-p="stereo" aria-pressed="true" id="p-stereo">Horizon</button>
+    <button data-p="allsky" aria-pressed="false" id="p-allsky">Tout le ciel</button>
+  </span>
   <span class="seg" id="mode">
     <button data-m="map" aria-pressed="true" id="m-map">Carte</button>
     <button data-m="aladin" aria-pressed="false" id="m-aladin">Atlas</button>
@@ -131,27 +154,29 @@
     <div class="row"><input type="search" id="find" placeholder="M31, NGC 7000, Orion…" aria-label="Chercher">
       <button class="btn primary" id="findGo">→</button></div>
 
-    <div class="grp" id="g-time">Heure</div>
-    <div class="row"><button class="btn" id="now">Maintenant</button>
-      <label class="toggle" style="margin:0"><input type="checkbox" id="live"> <span id="t-live">Live</span></label></div>
-    <div class="row"><input type="date" id="date" aria-label="Date"></div>
-    <div class="row"><input type="range" id="hour" min="-12" max="12" step="0.25" value="0"></div>
-    <div class="row" style="gap:.3rem;flex-wrap:wrap">
-      <button class="btn" data-jump="-30">−30 j</button>
-      <button class="btn" data-jump="-1">−1 j</button>
-      <button class="btn" data-jump="1">+1 j</button>
-      <button class="btn" data-jump="30">+30 j</button>
+    <div class="grp" id="g-time">Date & heure</div>
+    <div class="row"><input type="date" id="date" aria-label="Date"><input type="time" id="time" aria-label="Heure"></div>
+    <div class="flow">
+      <button id="f-back" title="−1 h">⏮</button>
+      <button id="f-slow" title="Ralentir">⏪</button>
+      <button id="f-play" title="Lecture / pause">▶</button>
+      <button id="f-fast" title="Accélérer">⏩</button>
+      <button id="f-fwd" title="+1 h">⏭</button>
+      <button id="f-now" title="Maintenant">⦿</button>
     </div>
-    <div id="clock" style="color:var(--faint);font-size:.76rem;font-family:'Space Mono',monospace"></div>
+    <p class="rate" id="rate"></p>
 
     <div class="grp" id="g-layers">Calques</div>
     <label class="toggle"><input type="checkbox" id="l-stars" checked> <span id="t-stars">Étoiles</span></label>
     <label class="toggle"><input type="checkbox" id="l-const" checked> <span id="t-const">Constellations</span></label>
     <label class="toggle"><input type="checkbox" id="l-labels" checked> <span id="t-labels">Noms</span></label>
-    <label class="toggle"><span class="sw" style="background:#f4c15d"></span><input type="checkbox" id="l-messier" checked> <span id="t-messier">Objets Messier (110)</span></label>
+    <label class="toggle"><span class="sw" style="background:#f4c15d"></span><input type="checkbox" id="l-messier" checked> <span id="t-messier">Objets Messier</span></label>
     <label class="toggle"><span class="sw" style="background:#c58cf0"></span><input type="checkbox" id="l-dso"> <span id="t-dso">NGC / IC</span></label>
     <label class="toggle"><input type="checkbox" id="l-planets" checked> <span id="t-planets">Planètes & Lune</span></label>
-    <label class="toggle"><input type="checkbox" id="l-grid" checked> <span id="t-grid">Grille horizon</span></label>
+    <label class="toggle"><input type="checkbox" id="l-atmosphere" checked> <span id="t-atmosphere">Atmosphère</span></label>
+    <label class="toggle"><input type="checkbox" id="l-ground" checked> <span id="t-ground">Sol</span></label>
+    <label class="toggle"><input type="checkbox" id="l-cardinals" checked> <span id="t-cardinals">Points cardinaux</span></label>
+    <label class="toggle"><input type="checkbox" id="l-grid"> <span id="t-grid">Grille azimutale</span></label>
     <p class="hint" id="t-dsohint"></p>
 
     <div id="fiche"></div>
@@ -163,8 +188,9 @@
     <div class="zoombar">
       <button id="zin" aria-label="Zoom +">+</button>
       <button id="zout" aria-label="Zoom −">−</button>
-      <button id="zreset" aria-label="Vue entière">⤢</button>
+      <button id="zreset" aria-label="Vue par défaut">⤢</button>
     </div>
+    <div class="statusbar" id="status"></div>
   </div>
 </div>
 
@@ -186,22 +212,32 @@
 document.addEventListener("DOMContentLoaded",()=>{
   const D=window.Despina, lang=()=>D.getLang?D.getLang():"fr";
   const el=id=>document.getElementById(id);
-  const TT={fr:{settings:"Réglages",close:"Fermer",geo:"Ma position",live:"Live",now:"Maintenant",
+  const TT={fr:{settings:"Réglages",close:"Fermer",geo:"Ma position",
       stars:"Étoiles",const:"Constellations",labels:"Noms",messier:"Objets Messier (110)",dso:"NGC / IC (1300+)",
-      planets:"Planètes & Lune",grid:"Grille horizon",place:"Lieu",time:"Heure",layers:"Calques",find:"Chercher un objet",
-      dsohint:"Le calque NGC/IC s'enrichit à mesure que tu zoomes (magnitude 8 → 12) pour rester lisible.",
-      hint:"Vue vers le haut : zénith au centre, horizon = cercle, Nord en haut. Glisse pour te déplacer, molette ou pincement pour zoomer. Clique un objet pour sa fiche.",
-      selc:"Constellation",selm:"Objet Messier",seld:"Objet NGC / IC",atlas:"Atlas",card:"Fiche",center:"Centrer",
-      notfound:"Ville introuvable",nf2:"Objet introuvable",below:"Cet objet est sous l'horizon à cette heure.",
-      mag:"mag",size:"taille",cons:"Constellation",photo:"photo…",date:"Date & heure"},
-    en:{settings:"Settings",close:"Close",geo:"My location",live:"Live",now:"Now",
+      planets:"Planètes & Lune",grid:"Grille azimutale",atmosphere:"Atmosphère",ground:"Sol",cardinals:"Points cardinaux",
+      place:"Lieu",time:"Date & heure",layers:"Calques",find:"Chercher un objet",
+      dsohint:"Le calque NGC/IC s'enrichit quand tu resserres le champ (magnitude 8 → 12).",
+      hint:"Glisse pour tourner la tête, molette ou pincement pour changer le champ. Flèches <kbd>←↑→↓</kbd> pour regarder ailleurs, <kbd>+</kbd>/<kbd>−</kbd> pour zoomer, <kbd>Espace</kbd> pour centrer l'objet sélectionné.",
+      selc:"Constellation",selm:"Objet Messier",seld:"Objet NGC / IC",selp:"Système solaire",
+      atlas:"Atlas",card:"Fiche",center:"Centrer",photo:"photo…",
+      notfound:"Ville introuvable",nf2:"Objet introuvable",below:"Objet sous l'horizon à cette heure",
+      mag:"mag",cons:"Constellation",alt:"Hauteur",az:"Azimut",radec:"RA / Dec",culm:"Culmine à",
+      circ:"circumpolaire",never:"ne se lève jamais",
+      real:"temps réel",frozen:"figé",day:"jour",
+      fov:"champ",look:"regard",sun:"Soleil"},
+    en:{settings:"Settings",close:"Close",geo:"My location",
       stars:"Stars",const:"Constellations",labels:"Names",messier:"Messier objects (110)",dso:"NGC / IC (1300+)",
-      planets:"Planets & Moon",grid:"Horizon grid",place:"Location",time:"Time",layers:"Layers",find:"Find an object",
-      dsohint:"The NGC/IC layer fills in as you zoom (magnitude 8 → 12) to stay readable.",
-      hint:"Looking up: zenith at the centre, horizon = circle, North on top. Drag to pan, wheel or pinch to zoom. Click an object for its card.",
-      selc:"Constellation",selm:"Messier object",seld:"NGC / IC object",atlas:"Atlas",card:"Card",center:"Centre",
-      notfound:"City not found",nf2:"Object not found",below:"That object is below the horizon at this time.",
-      mag:"mag",size:"size",cons:"Constellation",photo:"photo…",date:"Date & time"}};
+      planets:"Planets & Moon",grid:"Azimuthal grid",atmosphere:"Atmosphere",ground:"Ground",cardinals:"Cardinal points",
+      place:"Location",time:"Date & time",layers:"Layers",find:"Find an object",
+      dsohint:"The NGC/IC layer fills in as you narrow the field (magnitude 8 → 12).",
+      hint:"Drag to look around, wheel or pinch to change the field. Arrows <kbd>←↑→↓</kbd> to look, <kbd>+</kbd>/<kbd>−</kbd> to zoom, <kbd>Space</kbd> to centre the selection.",
+      selc:"Constellation",selm:"Messier object",seld:"NGC / IC object",selp:"Solar System",
+      atlas:"Atlas",card:"Card",center:"Centre",photo:"photo…",
+      notfound:"City not found",nf2:"Object not found",below:"Object below the horizon at this time",
+      mag:"mag",cons:"Constellation",alt:"Altitude",az:"Azimuth",radec:"RA / Dec",culm:"Culminates at",
+      circ:"circumpolar",never:"never rises",
+      real:"real time",frozen:"frozen",day:"day",
+      fov:"field",look:"looking",sun:"Sun"}};
   const tt=k=>(TT[lang()]||TT.fr)[k];
   const TYPE={GX:{fr:"Galaxie",en:"Galaxy"},OC:{fr:"Amas ouvert",en:"Open cluster"},GC:{fr:"Amas globulaire",en:"Globular cluster"},
     NE:{fr:"Nébuleuse",en:"Nebula"},PN:{fr:"Nébuleuse planétaire",en:"Planetary nebula"},
@@ -209,122 +245,157 @@ document.addEventListener("DOMContentLoaded",()=>{
     OT:{fr:"Astérisme / autre",en:"Asterism / other"}};
 
   function labels(){
-    ["settings","close","geo","live","stars","const","labels","messier","dso","planets","grid","hint","dsohint"]
-      .forEach(k=>{ const e=el("t-"+k); if(e) e.textContent=tt(k); });
-    el("g-place").textContent=tt("place"); el("g-time").textContent=tt("date");
+    ["settings","close","geo","stars","const","labels","messier","dso","planets","grid",
+     "atmosphere","ground","cardinals","dsohint"].forEach(k=>{ const e=el("t-"+k); if(e) e.textContent=tt(k); });
+    el("t-hint").innerHTML=tt("hint");
+    el("g-place").textContent=tt("place"); el("g-time").textContent=tt("time");
     el("g-layers").textContent=tt("layers"); el("g-find").textContent=tt("find");
-    el("now").textContent=tt("now");
   }
   labels();
 
-  let sm, sky, CONS_FR={}, offsetH=0, dayOff=0, loc={lat:48.8566,lon:2.3522,name:"Paris"};
-  const baseDate=()=>new Date(Date.now()+dayOff*86400000+offsetH*3600000);
-  const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-  function updClock(){
-    const d=baseDate();
-    el("clock").textContent=d.toLocaleString(lang()==="en"?"en":"fr-FR",{dateStyle:"medium",timeStyle:"short"});
-    el("date").value=iso(d);
-    el("loc-label").textContent=loc.name;
-  }
-  function refresh(){ if(sm) sm.setDate(baseDate()); updClock(); }
+  let sm, sky, CONS_FR={}, loc={lat:48.8566,lon:2.3522,name:"Paris"}, lastSel=null;
+  const RATES=[-86400,-3600,-600,-60,-10,-1,1,10,60,600,3600,86400];
+  let ri=RATES.indexOf(1);
+
+  const two=n=>String(n).padStart(2,"0");
+  const isoD=d=>`${d.getFullYear()}-${two(d.getMonth()+1)}-${two(d.getDate())}`;
+  const isoT=d=>`${two(d.getHours())}:${two(d.getMinutes())}`;
   function consName(ra,dec){ try{ const c=window.Astronomy.Constellation(ra/15,dec);
       return lang()==="en"?c.name:(CONS_FR[c.symbol]||c.name); }catch(e){ return null; } }
+  const fmtRa=ra=>{const h=ra/15,hh=Math.floor(h),mm=Math.floor((h-hh)*60);return `${hh}h${two(mm)}`;};
+  const fmtDec=d=>{const s=d<0?"−":"+",a=Math.abs(d);return `${s}${Math.floor(a)}°${two(Math.round((a-Math.floor(a))*60))}′`;};
+
+  // barre d'état + synchro des champs date/heure pendant que le temps s'écoule
+  function onView(v){
+    el("status").innerHTML =
+      `<span><b>${tt("fov")}</b> ${v.fov<1?v.fov.toFixed(2):v.fov.toFixed(1)}°</span>`+
+      (v.proj==="stereo"?`<span><b>${tt("look")}</b> az ${v.az.toFixed(0)}° / h ${v.alt.toFixed(0)}°</span>`:"")+
+      `<span>${v.date.toLocaleString(lang()==="en"?"en":"fr-FR",{dateStyle:"medium",timeStyle:"short"})}</span>`+
+      (v.sunAlt!=null?`<span><b>${tt("sun")}</b> ${v.sunAlt.toFixed(0)}°</span>`:"")+
+      `<span>${loc.name}</span>`;
+    if (document.activeElement!==el("date")) el("date").value=isoD(v.date);
+    if (document.activeElement!==el("time")) el("time").value=isoT(v.date);
+    el("f-play").classList.toggle("on", v.playing);
+    el("f-play").textContent = v.playing ? "⏸" : "▶";
+    el("rate").textContent = !v.playing ? tt("frozen")
+      : v.rate===1 ? tt("real")
+      : Math.abs(v.rate)===86400 ? (v.rate<0?"−1 ":"1 ")+tt("day")+"/s"
+      : "×"+v.rate;
+  }
 
   fetch("./assets/data/sky.json").then(r=>r.json()).then(data=>{
     sky=data; CONS_FR=Object.fromEntries(data.consts.map(c=>[c.d,c.fr]));
-    sm=D.SkyMap(el("skymap"),{ data, location:loc, date:baseDate(), onSelect:showFiche });
-    updClock();
+    sm=D.SkyMap(el("skymap"),{ data, location:loc, date:new Date(), onSelect:showFiche, onView });
     const go=new URLSearchParams(location.search).get("go");
     if(go){ el("find").value=go; findObj(); }
-  }).catch(()=>{ el("skywrap").innerHTML='<p style="color:var(--muted)">Données du ciel indisponibles.</p>'; });
+  }).catch(()=>{ el("skywrap").innerHTML='<p style="color:var(--muted);padding:1rem">Données du ciel indisponibles.</p>'; });
 
   function showFiche(sel){
+    lastSel=sel;
     const f=el("fiche");
     if(!sel){ f.innerHTML=""; return; }
+    const pos = sel.alt!=null ? `
+      <table>
+        <tr><td>${tt("alt")}</td><td>${sel.alt.toFixed(1)}°</td></tr>
+        <tr><td>${tt("az")}</td><td>${sel.az.toFixed(1)}°</td></tr>
+        <tr><td>${tt("radec")}</td><td>${fmtRa(sel.ra)} / ${fmtDec(sel.dec)}</td></tr>
+        ${sel.culm!=null?`<tr><td>${tt("culm")}</td><td>${sel.culm.toFixed(0)}°${sel.circumpolar?" · "+tt("circ"):""}</td></tr>`:""}
+      </table>` : "";
+
     if(sel.kind==="const"){
       f.innerHTML=`<div class="fiche"><span class="eyebrow">${tt("selc")}</span>
-        <h3>${lang()==="en"?sel.en:sel.fr}</h3>
-        <div class="mono">${sel.en}${sel.gen?" · "+sel.gen:""}</div>
-        <div class="acts"><button class="btn" data-atlas="${sel.en}">${tt("atlas")}</button></div></div>`;
-    } else if(sel.kind==="messier"||sel.kind==="dso"){
-      const nm = sel.kind==="messier" ? (sel.alt||"") : (lang()==="en"?(sel.en||""):(sel.fr||""));
-      const cn = consName(sel.ra,sel.dec);
+        <h3>${lang()==="en"?sel.la:sel.fr}</h3>
+        <div class="mono">${sel.la}${sel.gen?" · "+sel.gen:""}</div>
+        <div class="acts"><button class="btn" data-cs>${tt("center")}</button>
+          <button class="btn" data-atlas="${sel.la}">${tt("atlas")}</button></div></div>`;
+    } else if(sel.kind==="planet"){
+      f.innerHTML=`<div class="fiche"><span class="eyebrow">${tt("selp")}</span>
+        <h3>${sel.name[lang()]}</h3>${pos}
+        <div class="acts"><button class="btn" data-cs>${tt("center")}</button></div></div>`;
+    } else {
+      const alt2 = sel.kind==="messier" ? (sel.alt2||"") : (lang()==="en"?sel.en:sel.fr);
+      const cn = sel.cons ? (lang()==="en"?sel.cons:(CONS_FR[sel.cons]||sel.cons)) : consName(sel.ra,sel.dec);
       f.innerHTML=`<div class="fiche"><span class="eyebrow">${sel.kind==="messier"?tt("selm"):tt("seld")}</span>
-        <h3>${sel.name}${nm?` · ${nm}`:""}</h3>
+        <h3>${sel.name}${alt2?` · ${alt2}`:""}</h3>
         <div class="fphoto" id="fphoto"><span class="ld">${tt("photo")}</span></div>
         <div class="mono">${TYPE[sel.type]?TYPE[sel.type][lang()]:sel.type} · ${tt("mag")} ${sel.mag??"—"}${sel.dim?` · ${sel.dim}′`:""}</div>
         ${cn?`<div class="mono">${tt("cons")} : ${cn}</div>`:""}
+        ${pos}
         <div class="acts">
-          <button class="btn" data-center="${sel.ra},${sel.dec}">${tt("center")}</button>
+          <button class="btn" data-cs>${tt("center")}</button>
           ${sel.kind==="messier"?`<a class="btn" href="./messier.html?go=${encodeURIComponent(sel.name)}">${tt("card")}</a>`:""}
           <button class="btn" data-atlas="${sel.name}">${tt("atlas")}</button>
         </div></div>`;
-      // vraie photo du ciel (CDS) — silencieuse si le service est injoignable
       const box=f.querySelector("#fphoto");
       if(box && D.photoImg){
-        const img=D.photoImg(sel.ra,sel.dec,{dim:sel.dim,size:260,alt:sel.name,
-          onFail:()=>{ box.remove(); }});
+        const img=D.photoImg(sel.ra,sel.dec,{dim:sel.dim,size:260,alt:sel.name,onFail:()=>box.remove()});
         img.addEventListener("load",()=>{ const l=box.querySelector(".ld"); if(l) l.remove(); });
         box.appendChild(img);
       }
-    } else if(sel.kind==="planet"){
-      f.innerHTML=`<div class="fiche"><h3>${sel.name[lang()]}</h3></div>`;
     }
     f.querySelectorAll("[data-atlas]").forEach(b=>b.addEventListener("click",()=>toAtlas(b.dataset.atlas)));
-    f.querySelectorAll("[data-center]").forEach(b=>b.addEventListener("click",()=>{
-      const [ra,dec]=b.dataset.center.split(",").map(Number);
-      if(!sm.centerOn(ra,dec,Math.max(3,sm.getState().zoom))) el("loc-label").textContent=tt("below");
+    f.querySelectorAll("[data-cs]").forEach(b=>b.addEventListener("click",()=>{
+      if(!sm.centerSelected()) warn(tt("below"));
     }));
   }
 
-  // recherche : Messier, NGC/IC, ou constellation
   function findObj(){
     const q=el("find").value.trim(); if(!q||!sky||!sm) return;
     const k=q.toLowerCase().replace(/\s+/g," ");
-    let hit=sky.messier.find(m=>m[0].toLowerCase()===k || (m[5]||"").toLowerCase()===k);
-    if(hit){ sm.select({kind:"messier",name:hit[0]});
-      if(!sm.centerOn(hit[1],hit[2],3)) return warn(tt("below"));
-      return showFiche({kind:"messier",name:hit[0],ra:hit[1],dec:hit[2],type:hit[3],mag:hit[4],alt:hit[5],dim:hit[6]}); }
-    let o=sky.dso.find(x=>x[0].toLowerCase()===k || (x[6]||"").toLowerCase()===k || (x[7]||"").toLowerCase()===k);
-    if(o){ sm.setLayer("dso",true); el("l-dso").checked=true; sm.select({kind:"dso",name:o[0]});
-      if(!sm.centerOn(o[1],o[2],4)) return warn(tt("below"));
-      return showFiche({kind:"dso",name:o[0],ra:o[1],dec:o[2],type:o[3],mag:o[4],dim:o[5],fr:o[6],en:o[7]}); }
-    const c=sky.consts.find(x=>x.d.toLowerCase()===k || x.en.toLowerCase()===k || x.fr.toLowerCase()===k);
-    if(c){ sm.select({kind:"const",d:c.d});
-      if(!sm.centerOn(c.pt[0],c.pt[1],2)) return warn(tt("below"));
-      return showFiche({kind:"const",d:c.d,en:c.en,fr:c.fr,gen:c.gen}); }
+    const m=sky.messier.find(x=>x[0].toLowerCase()===k || (x[5]||"").toLowerCase()===k);
+    if(m){ if(!sm.centerOn(m[1],m[2],12)) return warn(tt("below"));
+      sm.select({kind:"messier",name:m[0]}, true); return; }
+    const o=sky.dso.find(x=>x[0].toLowerCase()===k || (x[6]||"").toLowerCase()===k || (x[7]||"").toLowerCase()===k);
+    if(o){ sm.setLayer("dso",true); el("l-dso").checked=true;
+      if(!sm.centerOn(o[1],o[2],8)) return warn(tt("below"));
+      sm.select({kind:"dso",name:o[0]}, true); return; }
+    const c=sky.consts.find(x=>[x.d,x.la,x.en,x.fr].some(n=>(n||"").toLowerCase()===k));
+    if(c){ if(!sm.centerOn(c.pt[0],c.pt[1],45)) return warn(tt("below"));
+      sm.select({kind:"const",d:c.d}, true); return; }
     warn(tt("nf2"));
   }
-  function warn(msg){ el("loc-label").textContent=msg; setTimeout(updClock,2600); }
+  function warn(msg){ const s=el("status"); s.innerHTML=`<span style="color:var(--accent)">${msg}</span>`;
+    setTimeout(()=>{ if(sm) sm.redraw(); },2400); }
   el("findGo").addEventListener("click",findObj);
   el("find").addEventListener("keydown",e=>{ if(e.key==="Enter") findObj(); });
 
   const setLayer=(id,key)=>el(id).addEventListener("change",e=>sm&&sm.setLayer(key,e.target.checked));
-  setLayer("l-stars","stars"); setLayer("l-const","constellations"); setLayer("l-labels","labels");
-  setLayer("l-messier","messier"); setLayer("l-dso","dso"); setLayer("l-planets","planets"); setLayer("l-grid","grid");
+  ["l-stars,stars","l-const,constellations","l-labels,labels","l-messier,messier","l-dso,dso",
+   "l-planets,planets","l-grid,grid","l-atmosphere,atmosphere","l-ground,ground","l-cardinals,cardinals"]
+    .forEach(s=>{ const [id,k]=s.split(","); setLayer(id,k); });
+
   el("zin").addEventListener("click",()=>sm&&sm.zoomIn());
   el("zout").addEventListener("click",()=>sm&&sm.zoomOut());
   el("zreset").addEventListener("click",()=>sm&&sm.resetView());
-  el("hour").addEventListener("input",e=>{ offsetH=parseFloat(e.target.value); refresh(); });
-  el("now").addEventListener("click",()=>{ offsetH=0; dayOff=0; el("hour").value=0; refresh(); });
-  el("date").addEventListener("change",e=>{
-    if(!e.target.value) return;
-    const [y,m,d]=e.target.value.split("-").map(Number);
-    const cur=baseDate();
-    const target=new Date(y,m-1,d,cur.getHours(),cur.getMinutes());
-    // on convertit la date choisie en décalage de jours, l'heure du curseur est conservée
-    dayOff += Math.round((target - cur)/86400000);
-    refresh();
-  });
-  document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>{
-    dayOff += parseInt(b.dataset.jump,10); refresh(); }));
-  el("live").addEventListener("change",e=>{ if(sm)sm.live(e.target.checked);
-    if(e.target.checked){ offsetH=0; dayOff=0; el("hour").value=0; updClock(); } });
+
+  // ----- écoulement du temps -----
+  const shift=h=>{ const s=sm.getState(); sm.setDate(new Date(s.date.getTime()+h*3600000)); };
+  el("f-back").addEventListener("click",()=>shift(-1));
+  el("f-fwd").addEventListener("click",()=>shift(1));
+  el("f-now").addEventListener("click",()=>{ ri=RATES.indexOf(1); sm.setRate(1); sm.pause(); sm.setNow(); });
+  el("f-play").addEventListener("click",()=>{ const s=sm.getState(); s.playing?sm.pause():sm.play(true); });
+  el("f-slow").addEventListener("click",()=>{ ri=Math.max(0,ri-1); sm.setRate(RATES[ri]); sm.play(true); });
+  el("f-fast").addEventListener("click",()=>{ ri=Math.min(RATES.length-1,ri+1); sm.setRate(RATES[ri]); sm.play(true); });
+  function applyDT(){
+    const dv=el("date").value, tv=el("time").value||"00:00";
+    if(!dv) return;
+    const [y,mo,d]=dv.split("-").map(Number), [h,mi]=tv.split(":").map(Number);
+    sm.setDate(new Date(y,mo-1,d,h,mi));
+  }
+  el("date").addEventListener("change",applyDT);
+  el("time").addEventListener("change",applyDT);
+
+  // ----- projection -----
+  document.querySelectorAll("#proj button").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll("#proj button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    sm && sm.setProjection(b.dataset.p);
+  }));
+
   el("geo").addEventListener("click",()=>{
     if(!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(p=>{
       loc={lat:p.coords.latitude,lon:p.coords.longitude,name:lang()==="en"?"My location":"Ma position"};
-      if(sm)sm.setLocation(loc.lat,loc.lon,loc.name); updClock();
+      if(sm)sm.setLocation(loc.lat,loc.lon,loc.name);
     },()=>warn(lang()==="en"?"Location refused":"Position refusée"));
   });
   function geocode(){
@@ -332,25 +403,23 @@ document.addEventListener("DOMContentLoaded",()=>{
     fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=1&language=${lang()}`)
       .then(r=>r.json()).then(j=>{ const r=j.results&&j.results[0]; if(!r) return warn(tt("notfound"));
         loc={lat:r.latitude,lon:r.longitude,name:r.name+(r.country_code?" ("+r.country_code+")":"")};
-        if(sm)sm.setLocation(loc.lat,loc.lon,loc.name); updClock();
+        el("loc-label").textContent=loc.name;
+        if(sm)sm.setLocation(loc.lat,loc.lon,loc.name);
       }).catch(()=>warn(tt("notfound")));
   }
   el("cityGo").addEventListener("click",geocode);
   el("city").addEventListener("keydown",e=>{ if(e.key==="Enter")geocode(); });
 
-  // tiroir de réglages (téléphone)
   const panel=el("panel"), back=el("panel-back");
-  function drawer(on){ panel.classList.toggle("open",on); back.hidden=!on;
-    document.body.style.overflow=on?"hidden":""; }
+  function drawer(on){ panel.classList.toggle("open",on); back.hidden=!on; document.body.style.overflow=on?"hidden":""; }
   el("panel-btn").addEventListener("click",()=>drawer(!panel.classList.contains("open")));
   el("drawer-close").addEventListener("click",()=>drawer(false));
   back.addEventListener("click",()=>drawer(false));
   document.addEventListener("keydown",e=>{ if(e.key==="Escape") drawer(false); });
   window.addEventListener("resize",()=>{ if(window.innerWidth>860) drawer(false); });
+  document.addEventListener("despina:lang",()=>{ labels(); if(sm){ sm.redraw(); if(lastSel) showFiche(lastSel); } });
 
-  document.addEventListener("despina:lang",()=>{ labels(); updClock(); if(sm)sm.redraw(); });
-
-  // ---- Atlas Aladin (chargé seulement à la demande) ----
+  // ----- Atlas Aladin -----
   let aladin=null, aladinLoaded=false;
   function loadAladin(){
     if(aladinLoaded) return; aladinLoaded=true;
@@ -371,7 +440,8 @@ document.addEventListener("DOMContentLoaded",()=>{
     document.querySelectorAll("#mode button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.m===m)));
     el("view-map").hidden = m!=="map"; el("view-aladin").hidden = m!=="aladin";
     el("panel-btn").style.display = m==="map" ? "" : "none";
-    if(m==="aladin") loadAladin(); else if(sm) sm.resize();
+    el("proj").style.display = m==="map" ? "" : "none";
+    if(m==="aladin"){ loadAladin(); if(sm) sm.pause(); } else if(sm) sm.resize();
   }
   document.querySelectorAll("#mode button").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.m)));
   el("al-go").addEventListener("click",()=>{ const q=el("al-q").value.trim(); if(aladin&&q)try{aladin.gotoObject(q);}catch(e){} });
