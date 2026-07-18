@@ -49,6 +49,7 @@
     color:var(--ink);padding:.45rem .55rem;font-family:inherit;font-size:.85rem}
   .toggle{display:flex;align-items:center;gap:.5rem;margin:.3rem 0;font-size:.88rem;cursor:pointer}
   .toggle .sw{width:9px;height:9px;border-radius:2px;flex:none}
+  #horizon-only{display:block}
   .hint{color:var(--faint);font-size:.75rem;margin:.5rem 0 0;line-height:1.45}
   .hint kbd{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:0 .25rem;
     font-family:"Space Mono",monospace;font-size:.9em}
@@ -114,12 +115,13 @@
 </head>
 <body>
 <header class="topbar">
-  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.7</span></span>
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.8</span></span>
   <nav class="nav">
     <a href="./index.html" data-i18n="nav.home">Accueil</a>
     <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
     <a href="./deepsky.html" class="active" data-i18n="nav.deepsky">Ciel profond</a>
     <a href="./messier.html" data-i18n="nav.messier">Messier</a>
+    <a href="./ngc.html" data-i18n="nav.ngc">NGC</a>
     <a href="./quiz.html" data-i18n="nav.quiz">Quiz</a>
     <a href="./observe.html" data-i18n="nav.observe">Ce soir</a>
     <a href="./info.html" data-i18n="nav.info">Infos</a>
@@ -128,13 +130,10 @@
 </header>
 
 <div class="modebar">
-  <span class="seg" id="proj">
-    <button data-p="stereo" aria-pressed="true" id="p-stereo">Horizon</button>
-    <button data-p="allsky" aria-pressed="false" id="p-allsky">Tout le ciel</button>
-  </span>
   <span class="seg" id="mode">
-    <button data-m="map" aria-pressed="true" id="m-map">Carte</button>
-    <button data-m="aladin" aria-pressed="false" id="m-aladin">Atlas</button>
+    <button data-m="map" aria-pressed="true" id="m-map" title="Carte tout-le-ciel, zénith au centre">Carte</button>
+    <button data-m="horizon" aria-pressed="false" id="m-horizon" title="Vue depuis le sol, façon Stellarium">Horizon</button>
+    <button data-m="aladin" aria-pressed="false" id="m-aladin" title="Imagerie réelle (Aladin / CDS)">Atlas</button>
   </span>
   <button class="btn panel-btn" id="panel-btn">⚙ <span id="t-settings">Réglages</span></button>
   <span class="loc" id="loc-label">Paris</span>
@@ -173,8 +172,10 @@
     <label class="toggle"><span class="sw" style="background:#f4c15d"></span><input type="checkbox" id="l-messier" checked> <span id="t-messier">Objets Messier</span></label>
     <label class="toggle"><span class="sw" style="background:#c58cf0"></span><input type="checkbox" id="l-dso"> <span id="t-dso">NGC / IC</span></label>
     <label class="toggle"><input type="checkbox" id="l-planets" checked> <span id="t-planets">Planètes & Lune</span></label>
-    <label class="toggle"><input type="checkbox" id="l-atmosphere" checked> <span id="t-atmosphere">Atmosphère</span></label>
-    <label class="toggle"><input type="checkbox" id="l-ground" checked> <span id="t-ground">Sol</span></label>
+    <span id="horizon-only">
+      <label class="toggle"><input type="checkbox" id="l-atmosphere" checked> <span id="t-atmosphere">Atmosphère</span></label>
+      <label class="toggle"><input type="checkbox" id="l-ground" checked> <span id="t-ground">Sol</span></label>
+    </span>
     <label class="toggle"><input type="checkbox" id="l-cardinals" checked> <span id="t-cardinals">Points cardinaux</span></label>
     <label class="toggle"><input type="checkbox" id="l-grid"> <span id="t-grid">Grille azimutale</span></label>
     <p class="hint" id="t-dsohint"></p>
@@ -217,7 +218,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       planets:"Planètes & Lune",grid:"Grille azimutale",atmosphere:"Atmosphère",ground:"Sol",cardinals:"Points cardinaux",
       place:"Lieu",time:"Date & heure",layers:"Calques",find:"Chercher un objet",
       dsohint:"Le calque NGC/IC s'enrichit quand tu resserres le champ (magnitude 8 → 12).",
-      hint:"Glisse pour tourner la tête, molette ou pincement pour changer le champ. Flèches <kbd>←↑→↓</kbd> pour regarder ailleurs, <kbd>+</kbd>/<kbd>−</kbd> pour zoomer, <kbd>Espace</kbd> pour centrer l'objet sélectionné.",
+      hint:"<b>Carte</b> : tout le ciel d'un coup, zénith au centre, Nord en haut — glisse pour déplacer, molette pour agrandir. <b>Horizon</b> : la vue depuis le sol, façon Stellarium — glisse pour tourner la tête, molette pour changer le champ, <kbd>←↑→↓</kbd>, <kbd>+</kbd>/<kbd>−</kbd>, <kbd>Espace</kbd> pour centrer.",
       selc:"Constellation",selm:"Objet Messier",seld:"Objet NGC / IC",selp:"Système solaire",
       atlas:"Atlas",card:"Fiche",center:"Centrer",photo:"photo…",
       notfound:"Ville introuvable",nf2:"Objet introuvable",below:"Objet sous l'horizon à cette heure",
@@ -230,7 +231,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       planets:"Planets & Moon",grid:"Azimuthal grid",atmosphere:"Atmosphere",ground:"Ground",cardinals:"Cardinal points",
       place:"Location",time:"Date & time",layers:"Layers",find:"Find an object",
       dsohint:"The NGC/IC layer fills in as you narrow the field (magnitude 8 → 12).",
-      hint:"Drag to look around, wheel or pinch to change the field. Arrows <kbd>←↑→↓</kbd> to look, <kbd>+</kbd>/<kbd>−</kbd> to zoom, <kbd>Space</kbd> to centre the selection.",
+      hint:"<b>Map</b>: the whole sky at once, zenith centred, North up — drag to pan, wheel to magnify. <b>Horizon</b>: the view from the ground, Stellarium-style — drag to look around, wheel to change the field, <kbd>←↑→↓</kbd>, <kbd>+</kbd>/<kbd>−</kbd>, <kbd>Space</kbd> to centre.",
       selc:"Constellation",selm:"Messier object",seld:"NGC / IC object",selp:"Solar System",
       atlas:"Atlas",card:"Card",center:"Centre",photo:"photo…",
       notfound:"City not found",nf2:"Object not found",below:"Object below the horizon at this time",
@@ -285,7 +286,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   fetch("./assets/data/sky.json").then(r=>r.json()).then(data=>{
     sky=data; CONS_FR=Object.fromEntries(data.consts.map(c=>[c.d,c.fr]));
-    sm=D.SkyMap(el("skymap"),{ data, location:loc, date:new Date(), onSelect:showFiche, onView });
+    sm=D.SkyMap(el("skymap"),{ data, location:loc, date:new Date(), projection:"allsky",
+      layers:{atmosphere:false, ground:false}, onSelect:showFiche, onView });
+    setMode("map");
     const go=new URLSearchParams(location.search).get("go");
     if(go){ el("find").value=go; findObj(); }
   }).catch(()=>{ el("skywrap").innerHTML='<p style="color:var(--muted);padding:1rem">Données du ciel indisponibles.</p>'; });
@@ -385,11 +388,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   el("date").addEventListener("change",applyDT);
   el("time").addEventListener("change",applyDT);
 
-  // ----- projection -----
-  document.querySelectorAll("#proj button").forEach(b=>b.addEventListener("click",()=>{
-    document.querySelectorAll("#proj button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
-    sm && sm.setProjection(b.dataset.p);
-  }));
 
   el("geo").addEventListener("click",()=>{
     if(!navigator.geolocation) return;
@@ -436,12 +434,30 @@ document.addEventListener("DOMContentLoaded",()=>{
     const t=setInterval(()=>{ if(aladin){ clearInterval(t); try{ aladin.gotoObject(name); }catch(e){} } },300);
     setTimeout(()=>clearInterval(t),8000);
   }
+  /* Trois onglets, gardés distincts :
+     - "map"     : la carte tout-le-ciel d'origine (zénith au centre, N en haut,
+                   loupe) — sans atmosphère ni sol, comme jusqu'à la v0.6 ;
+     - "horizon" : la vue depuis le sol, façon Stellarium ;
+     - "aladin"  : l'imagerie réelle du CDS. */
+  let mode="map";
   function setMode(m){
+    mode=m;
     document.querySelectorAll("#mode button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.m===m)));
-    el("view-map").hidden = m!=="map"; el("view-aladin").hidden = m!=="aladin";
-    el("panel-btn").style.display = m==="map" ? "" : "none";
-    el("proj").style.display = m==="map" ? "" : "none";
-    if(m==="aladin"){ loadAladin(); if(sm) sm.pause(); } else if(sm) sm.resize();
+    const isSky = m!=="aladin";
+    el("view-map").hidden = !isSky; el("view-aladin").hidden = isSky;
+    el("panel-btn").style.display = isSky ? "" : "none";
+    el("horizon-only").hidden = m!=="horizon";
+    if(!isSky){ loadAladin(); if(sm) sm.pause(); return; }
+    if(!sm) return;
+    if(m==="map"){
+      sm.setProjection("allsky");
+      sm.setLayer("atmosphere",false); sm.setLayer("ground",false);
+    } else {
+      sm.setProjection("stereo");
+      sm.setLayer("atmosphere", el("l-atmosphere").checked);
+      sm.setLayer("ground", el("l-ground").checked);
+    }
+    sm.resize();
   }
   document.querySelectorAll("#mode button").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.m)));
   el("al-go").addEventListener("click",()=>{ const q=el("al-q").value.trim(); if(aladin&&q)try{aladin.gotoObject(q);}catch(e){} });

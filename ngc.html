@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catalogue NGC / IC, en photos | Despina</title>
+<meta name="theme-color" content="#0a0e1a">
+<meta name="description" content="Plus de 1300 objets NGC et IC jusqu'à la magnitude 12, en fiches avec de vraies photos du ciel : galaxies, amas, nébuleuses. Filtres par type, recherche, tri par éclat.">
+<link rel="canonical" href="https://VOTRE-COMPTE.github.io/despina-aapp/ngc.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Despina">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:url" content="https://VOTRE-COMPTE.github.io/despina-aapp/ngc.html">
+<meta property="og:title" content="Catalogue NGC / IC, en photos | Despina">
+<meta property="og:description" content="Plus de 1300 objets NGC et IC jusqu'à la magnitude 12, en fiches avec de vraies photos du ciel : galaxies, amas, nébuleuses.">
+<meta property="og:image" content="https://VOTRE-COMPTE.github.io/despina-aapp/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Despina — planétarium interactif">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Catalogue NGC / IC, en photos | Despina">
+<meta name="twitter:description" content="Plus de 1300 objets NGC et IC jusqu'à la magnitude 12, en fiches avec de vraies photos du ciel.">
+<meta name="twitter:image" content="https://VOTRE-COMPTE.github.io/despina-aapp/assets/img/og.png">
+<link rel="icon" href="./assets/img/icon.svg">
+<link rel="manifest" href="./manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/css/base.css">
+<script src="./assets/js/i18n.js"></script>
+<script src="./assets/js/theme.js"></script>
+<style>
+  .filters{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin:.8rem 0 .3rem}
+  .filters .chip{cursor:pointer}
+  .filters .chip[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:transparent;font-weight:600}
+  .tools{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin:.3rem 0 .6rem}
+  .tools input,.tools select{background:var(--surface);border:1px solid var(--line);border-radius:9px;color:var(--ink);
+    padding:.45rem .6rem;font-family:inherit;font-size:.85rem}
+  .tools input{flex:1;min-width:150px}
+  .tools .count{margin-left:auto;color:var(--faint);font:.76rem "Space Mono",monospace}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:.7rem;margin-top:.4rem}
+  .mcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;
+    cursor:pointer;text-align:left;padding:0;font-family:inherit;color:var(--ink);transition:border-color .15s,transform .15s}
+  .mcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .mcard .ph{position:relative;aspect-ratio:1/1;background:#05070f;display:block;overflow:hidden}
+  .mcard .ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .mcard .cap{padding:.4rem .5rem}
+  .mcard .cap b{font-family:"Space Mono",monospace;font-size:.82rem}
+  .mcard .cap span{display:block;color:var(--faint);font-size:.68rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mcard.seen{border-color:#4bd48e55}
+  .mcard.seen .cap b::after{content:" ✓";color:#4bd48e}
+  .more{display:block;margin:1.2rem auto 0}
+
+  .detail{position:fixed;inset:0;z-index:60;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);display:grid;place-items:center;padding:1rem}
+  .dbox{background:var(--bg-2);border:1px solid var(--line);border-radius:18px;max-width:840px;width:100%;
+    max-height:92vh;overflow-y:auto;box-shadow:var(--shadow);position:relative}
+  .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  @media (max-width:760px){ .dgrid{grid-template-columns:1fr} }
+  .dphoto{position:relative;aspect-ratio:1/1;background:#05070f;overflow:hidden}
+  .dphoto img{width:100%;height:100%;object-fit:cover;display:block}
+  .dphoto .loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--faint);
+    font:.75rem "Space Mono",monospace;text-align:center;padding:1rem;pointer-events:none}
+  .dinfo{padding:1.2rem 1.3rem}
+  .dinfo h2{margin:.1rem 0 .1rem;font-size:1.5rem}
+  .dinfo .sub{color:var(--muted);font-family:"Space Mono",monospace;font-size:.82rem;margin-bottom:.7rem}
+  .dinfo table{width:100%;border-collapse:collapse;font-size:.88rem}
+  .dinfo td{padding:.35rem 0;border-bottom:1px dashed var(--line)}
+  .dinfo td:last-child{text-align:right;font-family:"Space Mono",monospace;color:var(--muted)}
+  .dnav{display:flex;gap:.5rem;align-items:center;padding:.8rem 1.3rem 1.2rem;flex-wrap:wrap}
+  .dnav .count{margin-left:auto;color:var(--faint);font:.76rem "Space Mono",monospace}
+  .dclose{position:absolute;top:.6rem;right:.6rem;z-index:2;background:var(--surface);border:1px solid var(--line);
+    color:var(--ink);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:.9rem}
+  .surveypick{display:flex;gap:.3rem;flex-wrap:wrap;margin:.6rem 0 0}
+  .surveypick button{font-size:.72rem;padding:.25rem .5rem}
+  .surveypick button[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:transparent}
+  .note{color:var(--faint);font-size:.76rem;line-height:1.5}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand"><img src="./assets/img/icon.svg" width="26" height="26" alt=""><b>DESPINA</b><span class="v">v0.8</span></span>
+  <nav class="nav">
+    <a href="./index.html" data-i18n="nav.home">Accueil</a>
+    <a href="./solar.html" data-i18n="nav.solar">Système solaire</a>
+    <a href="./deepsky.html" data-i18n="nav.deepsky">Ciel profond</a>
+    <a href="./messier.html" data-i18n="nav.messier">Messier</a>
+    <a href="./ngc.html" class="active" data-i18n="nav.ngc">NGC</a>
+    <a href="./quiz.html" data-i18n="nav.quiz">Quiz</a>
+    <a href="./observe.html" data-i18n="nav.observe">Ce soir</a>
+    <a href="./info.html" data-i18n="nav.info">Infos</a>
+  </nav>
+  <span data-lang-switch></span><span data-theme-switch></span>
+</header>
+
+<main class="wrap">
+  <p class="eyebrow" id="t-eyebrow">Catalogues NGC & IC · fiches d'apprentissage</p>
+  <h1 id="t-title">Le ciel profond au-delà de Messier</h1>
+  <p class="note" id="t-lede"></p>
+
+  <div class="filters" id="filters"></div>
+  <div class="tools">
+    <input type="search" id="q" placeholder="NGC 7000, Tête de Cheval…" aria-label="Chercher">
+    <select id="sort" aria-label="Tri"></select>
+    <label class="note" style="display:flex;gap:.35rem;align-items:center;cursor:pointer">
+      <input type="checkbox" id="namedOnly"> <span id="t-named">Nommés seulement</span></label>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="mgrid" id="grid"></div>
+  <button class="btn more" id="more" hidden></button>
+  <p class="note" id="t-src" style="text-align:center;margin-top:1.6rem"></p>
+</main>
+
+<div class="detail" id="detail" hidden>
+  <div class="dbox">
+    <button class="dclose" id="dclose" aria-label="Fermer">✕</button>
+    <div class="dgrid">
+      <div class="dphoto" id="dphoto"></div>
+      <div class="dinfo" id="dinfo"></div>
+    </div>
+    <div class="dnav">
+      <button class="btn" id="prev">← <span id="t-prev">Précédent</span></button>
+      <button class="btn primary" id="nextb"><span id="t-next">Suivant</span> →</button>
+      <a class="btn" id="onmap" href="./deepsky.html"><span id="t-onmap">Sur la carte</span></a>
+      <span class="count" id="dcount"></span>
+    </div>
+  </div>
+</div>
+
+<script defer src="./assets/vendor/astronomy.browser.min.js"></script>
+<script defer src="./assets/js/skyphoto.js"></script>
+<script defer>
+document.addEventListener("DOMContentLoaded",()=>{
+  const D=window.Despina, lang=()=>D.getLang?D.getLang():"fr";
+  const el=id=>document.getElementById(id);
+  const TT={fr:{eyebrow:"Catalogues NGC & IC · fiches d'apprentissage",title:"Le ciel profond au-delà de Messier",
+      lede:"Le <i>New General Catalogue</i> (Dreyer, 1888) et son supplément <i>Index Catalogue</i> recensent des milliers de galaxies, amas et nébuleuses. En voici <b>1312</b>, tous ceux plus brillants que la magnitude 12 — de quoi occuper bien des nuits après les 110 de Messier. Les images sont de véritables clichés du ciel, découpés à la demande.",
+      src:"Images : hips2fits / CDS Strasbourg (relevés DSS2, 2MASS, AllWISE). Données : OpenNGC via d3-celestial. Constellation via astronomy-engine (frontières UAI).",
+      all:"Tous",prev:"Précédent",next:"Suivant",onmap:"Sur la carte",named:"Nommés seulement",
+      type:"Type",mag:"Magnitude",size:"Taille apparente",cons:"Constellation",coords:"Coordonnées (J2000)",
+      loading:"Chargement de l'image…",failed:"Image indisponible (service CDS injoignable).",
+      none:"Aucun objet ne correspond.",seen:"vues",more:"Voir plus",shown:"affichés",
+      sortMag:"Les plus brillants",sortNum:"Numéro de catalogue",sortSize:"Les plus grands",sortName:"Nommés d'abord"},
+    en:{eyebrow:"NGC & IC catalogues · learning cards",title:"Deep sky beyond Messier",
+      lede:"The <i>New General Catalogue</i> (Dreyer, 1888) and its <i>Index Catalogue</i> supplement list thousands of galaxies, clusters and nebulae. Here are <b>1312</b> of them — every object brighter than magnitude 12, plenty to keep you busy after Messier's 110. Images are real sky photographs, cut out on demand.",
+      src:"Images: hips2fits / CDS Strasbourg (DSS2, 2MASS, AllWISE surveys). Data: OpenNGC via d3-celestial. Constellation via astronomy-engine (IAU boundaries).",
+      all:"All",prev:"Previous",next:"Next",onmap:"On the map",named:"Named only",
+      type:"Type",mag:"Magnitude",size:"Apparent size",cons:"Constellation",coords:"Coordinates (J2000)",
+      loading:"Loading image…",failed:"Image unavailable (CDS service unreachable).",
+      none:"No object matches.",seen:"seen",more:"Show more",shown:"shown",
+      sortMag:"Brightest first",sortNum:"Catalogue number",sortSize:"Largest first",sortName:"Named first"}};
+  const tt=k=>(TT[lang()]||TT.fr)[k];
+  const TYPE={GX:{fr:"Galaxie",en:"Galaxy"},OC:{fr:"Amas ouvert",en:"Open cluster"},GC:{fr:"Amas globulaire",en:"Globular cluster"},
+    NE:{fr:"Nébuleuse",en:"Nebula"},PN:{fr:"Nébuleuse planétaire",en:"Planetary nebula"},
+    SR:{fr:"Rémanent de supernova",en:"Supernova remnant"},GG:{fr:"Groupe de galaxies",en:"Galaxy group"}};
+  const CONS_FR={};
+  const PAGE=60;
+
+  let ALL=[], view=[], cur=0, filter="all", search="", sort="mag", namedOnly=false, shown=PAGE,
+      survey="CDS/P/DSS2/color";
+  const seen=new Set();
+  const nameOf=o=>lang()==="en" ? (o[7]||o[6]||"") : (o[6]||o[7]||"");
+
+  function labels(){ ["eyebrow","title","lede","src","prev","next","onmap","named"].forEach(k=>{
+      const e=el("t-"+k); if(e) k==="lede"||k==="src" ? e.innerHTML=tt(k) : e.textContent=tt(k); }); }
+
+  function consName(ra,dec){
+    try{ const c=window.Astronomy.Constellation(ra/15,dec);
+      return lang()==="en" ? c.name : (CONS_FR[c.symbol]||c.name);
+    }catch(e){ return "—"; }
+  }
+  const two=n=>String(n).padStart(2,"0");
+  const fmtRa=ra=>{const h=ra/15,hh=Math.floor(h),mm=Math.floor((h-hh)*60),ss=Math.round((((h-hh)*60)-mm)*60);
+    return `${hh}h ${two(mm)}m ${two(ss)}s`;};
+  const fmtDec=d=>{const s=d<0?"−":"+",a=Math.abs(d),dd=Math.floor(a);return `${s}${dd}° ${two(Math.round((a-dd)*60))}′`;};
+
+  function buildFilters(){
+    const counts={}; ALL.forEach(o=>counts[o[3]]=(counts[o[3]]||0)+1);
+    const keys=["all",...Object.keys(TYPE).filter(k=>counts[k])];
+    el("filters").innerHTML=keys.map(k=>{
+      const lbl = k==="all" ? `${tt("all")} (${ALL.length})` : `${TYPE[k][lang()]} (${counts[k]})`;
+      return `<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${lbl}</button>`;
+    }).join("");
+    el("filters").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+      filter=b.dataset.f; shown=PAGE; buildFilters(); render(); }));
+    el("sort").innerHTML=[["mag","sortMag"],["num","sortNum"],["size","sortSize"],["name","sortName"]]
+      .map(([v,k])=>`<option value="${v}"${sort===v?" selected":""}>${tt(k)}</option>`).join("");
+  }
+
+  function match(o){
+    if(filter!=="all" && o[3]!==filter) return false;
+    if(namedOnly && !(o[6]||o[7])) return false;
+    if(!search) return true;
+    return (o[0]+" "+(o[6]||"")+" "+(o[7]||"")).toLowerCase().includes(search);
+  }
+  const num=o=>parseInt(o[0].split(" ")[1],10);
+  function sorted(a){
+    const c=a.slice();
+    if(sort==="mag")  c.sort((x,y)=>(x[4]??99)-(y[4]??99));
+    if(sort==="num")  c.sort((x,y)=>x[0].split(" ")[0].localeCompare(y[0].split(" ")[0])||num(x)-num(y));
+    if(sort==="size") c.sort((x,y)=>(y[5]||0)-(x[5]||0));
+    if(sort==="name") c.sort((x,y)=>((y[6]||y[7])?1:0)-((x[6]||x[7])?1:0) || (x[4]??99)-(y[4]??99));
+    return c;
+  }
+  function render(){
+    view=sorted(ALL.filter(match));
+    const g=el("grid");
+    el("count").textContent = view.length
+      ? `${Math.min(shown,view.length)} ${tt("shown")} / ${view.length}` : "";
+    if(!view.length){ g.innerHTML=`<p class="note">${tt("none")}</p>`; el("more").hidden=true; return; }
+    g.innerHTML="";
+    // On n'affiche qu'une page à la fois : 1312 vignettes = 1312 requêtes au CDS.
+    view.slice(0,shown).forEach((o,i)=>{
+      const b=document.createElement("button");
+      b.className="mcard"+(seen.has(o[0])?" seen":"");
+      const nm=nameOf(o);
+      b.innerHTML=`<span class="ph"></span>
+        <span class="cap"><b>${o[0]}</b><span>${nm||TYPE[o[3]][lang()]}</span></span>`;
+      b.querySelector(".ph").appendChild(D.photoImg(o[1],o[2],{dim:o[5],size:200,survey,alt:o[0]}));
+      b.addEventListener("click",()=>open(i));
+      g.appendChild(b);
+    });
+    el("more").hidden = shown>=view.length;
+    el("more").textContent = `${tt("more")} (${view.length-shown})`;
+  }
+  el("more").addEventListener("click",()=>{ shown+=PAGE; render(); });
+
+  function open(i){
+    cur=i; const o=view[cur]; if(!o) return;
+    seen.add(o[0]);
+    el("detail").hidden=false; document.body.style.overflow="hidden";
+    const ph=el("dphoto");
+    ph.innerHTML=`<div class="loading">${tt("loading")}</div>`;
+    const img=D.photoImg(o[1],o[2],{dim:o[5],size:600,survey,eager:true,alt:o[0],
+      onFail:()=>{ const l=ph.querySelector(".loading"); if(l) l.textContent=tt("failed"); }});
+    img.addEventListener("load",()=>{ const l=ph.querySelector(".loading"); if(l) l.remove(); });
+    ph.appendChild(img);
+    const nm=nameOf(o);
+    el("dinfo").innerHTML=`
+      <h2>${o[0]}${nm?` · <span style="font-size:1rem;color:var(--muted)">${nm}</span>`:""}</h2>
+      <div class="sub">${TYPE[o[3]][lang()]}</div>
+      <table>
+        <tr><td>${tt("cons")}</td><td>${consName(o[1],o[2])}</td></tr>
+        <tr><td>${tt("mag")}</td><td>${o[4]!=null?o[4]:"—"}</td></tr>
+        <tr><td>${tt("size")}</td><td>${o[5]?o[5]+"′":"—"}</td></tr>
+        <tr><td>${tt("coords")}</td><td>${fmtRa(o[1])} / ${fmtDec(o[2])}</td></tr>
+      </table>
+      <div class="surveypick">${D.SURVEYS.map(s=>`<button class="btn" data-s="${s.id}" aria-pressed="${s.id===survey}">${s[lang()]}</button>`).join("")}</div>`;
+    el("dinfo").querySelectorAll("[data-s]").forEach(b=>b.addEventListener("click",()=>{ survey=b.dataset.s; open(cur); render(); }));
+    el("dcount").textContent=`${cur+1} / ${view.length} · ${seen.size} ${tt("seen")}`;
+    el("onmap").href=`./deepsky.html?go=${encodeURIComponent(o[0])}`;
+    el("prev").disabled = cur<=0; el("nextb").disabled = cur>=view.length-1;
+  }
+  function close(){ el("detail").hidden=true; document.body.style.overflow=""; render(); }
+  el("dclose").addEventListener("click",close);
+  el("detail").addEventListener("click",e=>{ if(e.target===el("detail")) close(); });
+  el("prev").addEventListener("click",()=>open(cur-1));
+  el("nextb").addEventListener("click",()=>{ if(cur+1>=shown && shown<view.length){ shown+=PAGE; render(); } open(cur+1); });
+  document.addEventListener("keydown",e=>{
+    if(el("detail").hidden) return;
+    if(e.key==="Escape") close();
+    if(e.key==="ArrowLeft"&&cur>0) open(cur-1);
+    if(e.key==="ArrowRight"&&cur<view.length-1) open(cur+1);
+  });
+  el("q").addEventListener("input",e=>{ search=e.target.value.trim().toLowerCase(); shown=PAGE; render(); });
+  el("sort").addEventListener("change",e=>{ sort=e.target.value; shown=PAGE; render(); });
+  el("namedOnly").addEventListener("change",e=>{ namedOnly=e.target.checked; shown=PAGE; render(); });
+  document.addEventListener("despina:lang",()=>{ labels(); buildFilters(); render(); if(!el("detail").hidden) open(cur); });
+
+  fetch("./assets/data/sky.json").then(r=>r.json()).then(d=>{
+    Object.assign(CONS_FR, Object.fromEntries(d.consts.map(c=>[c.d,c.fr])));
+    ALL=d.dso||[]; labels(); buildFilters(); render();
+    const go=new URLSearchParams(location.search).get("go");
+    if(go){ const i=view.findIndex(o=>o[0].toLowerCase()===go.toLowerCase());
+      if(i>=0){ if(i>=shown){ shown=Math.ceil((i+1)/PAGE)*PAGE; render(); } open(i); } }
+  }).catch(()=>{ el("grid").innerHTML='<p class="note">Données indisponibles.</p>'; });
+});
+</script>
+</body>
+</html>

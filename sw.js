@@ -8,10 +8,10 @@
    - statiques même origine  : cache d'abord, réseau en repli   -> instantané
    - tiers (polices, CDS…)   : réseau seul, jamais mis en cache -> pas de réponses opaques qui gonflent le cache
 */
-const VERSION = "despina-v0.7";
+const VERSION = "despina-v0.8";
 const SHELL = [
   "./", "./index.html", "./solar.html", "./deepsky.html", "./messier.html",
-  "./quiz.html", "./observe.html", "./info.html",
+  "./ngc.html", "./quiz.html", "./observe.html", "./info.html",
   "./manifest.json",
   "./assets/css/base.css",
   "./assets/js/i18n.js", "./assets/js/theme.js", "./assets/js/solar.js",

@@ -4,21 +4,18 @@
 
 Sans inscription, sans base de données : tous les calculs se font dans le navigateur.
 
-## Fonctions (v0.7)
-- **Ciel profond — la carte fonctionne comme Stellarium** :
-  - **Vue à la première personne** (défaut) : on regarde vers l'horizon, le **sol** est sous nos pieds, les **points cardinaux** sont posés sur la ligne d'horizon. On **tourne la tête** en glissant, la **molette / le pincement change le champ de vue** (180° → 0,5°). Aucun roulis : l'horizon reste horizontal, impossible d'avoir la tête à l'envers.
-  - **Atmosphère** : la couleur du ciel suit la hauteur du Soleil (jour bleu, teinte chaude au couchant, nuit noire), halo solaire, et les étoiles s'effacent au lever du jour.
-  - **Écoulement du temps** : lecture/pause, vitesses ×1 → 1 jour/s en avant comme en arrière, ⏮/⏭ à l'heure, retour à « maintenant ».
-  - **Barre d'état** : champ de vue, direction du regard, date, hauteur du Soleil, lieu.
-  - **Lune dessinée avec sa phase**, limbe éclairé tourné vers le Soleil.
-  - **Clavier** : `←↑→↓` regarder, `+` / `−` zoomer, `Espace` centrer la sélection.
-  - Vue **tout-le-ciel** disponible d'un bouton. Contenu : **88 constellations**, **110 Messier**, **1312 NGC/IC** (seuil de magnitude progressif selon le champ), étoiles jusqu'à mag 6, planètes / Lune / Soleil. Tout est cliquable : fiche avec type, magnitude, taille, constellation, **hauteur, azimut, RA/Dec, culmination**, et une **photo réelle**. **Recherche** par sigle, nom UAI, nom usuel ou français.
-  - **Atlas Aladin** (CDS Strasbourg) toujours disponible en second mode.
-- **Messier** : les **110 objets en fiches d'apprentissage** avec de **vraies photos du ciel** (DSS2 / 2MASS / WISE via hips2fits). Grille cliquable, parcours un par un (flèches), filtres, recherche, suivi des fiches vues.
+## Fonctions (v0.8)
+- **Ciel profond — trois onglets, tous conservés** :
+  - **Carte** *(par défaut)* : la vue **tout-le-ciel** d'origine — zénith au centre, Nord en haut, Est à gauche ; on déplace à la souris et on agrandit à la molette (loupe). C'est la carte telle qu'elle était jusqu'à la v0.6.
+  - **Horizon** : la vue **depuis le sol, façon Stellarium** — on regarde vers l'horizon, le **sol** est sous nos pieds, les cardinaux sur la ligne d'horizon. Glisser = tourner la tête, molette = champ de vue (180° → 0,5°). **Atmosphère** (le ciel suit la hauteur du Soleil), **Lune avec sa phase**, **écoulement du temps** (×1 → 1 jour/s, avant/arrière), **barre d'état**. Aucun roulis : l'horizon reste horizontal.
+  - **Atlas** : imagerie réelle Aladin Lite v3 (CDS Strasbourg).
+  - Communs : **88 constellations**, **110 Messier**, **1312 NGC/IC**, étoiles jusqu'à mag 6, planètes/Lune/Soleil. Tout cliquable (fiche : type, magnitude, taille, constellation, hauteur, azimut, RA/Dec, culmination, **photo réelle**). **Recherche** par sigle, nom UAI, nom usuel ou français.
+- **Messier** : les **110 objets en fiches** avec de vraies photos (DSS2 / 2MASS / WISE via hips2fits).
+- **NGC / IC** : les **1312 objets** jusqu'à la magnitude 12, mêmes fiches photo, filtres par type, tris (plus brillants, numéro, plus grands, nommés d'abord), recherche, pages de 60.
 - **Quiz** : **un** mode à la fois parmi 5 (Constellations, **Photos Messier**, Types, Noms, Objet → constellation), 3 difficultés, score / série / record.
 - **Ce soir** : coucher du Soleil, nuit noire (−18°), Lune, planètes visibles, Messier bien placés, mini-carte tout-le-ciel.
-- **Système solaire** : positions et données réelles du jour, toutes les lunes nommées, planètes naines, méthodes de calcul expliquées.
-- **Hors-ligne** (service worker + moteur d'éphémérides embarqué), 3 thèmes dont **nuit rouge**, **FR / EN**, menu mobile refermable, PWA installable.
+- **Système solaire** : positions et données réelles du jour, toutes les lunes nommées, planètes naines, méthodes expliquées.
+- **Hors-ligne** (service worker + moteur embarqué), 3 thèmes dont **nuit rouge**, **FR / EN**, menu mobile refermable, PWA.
 
 
 ## Déploiement sur GitHub Pages
@@ -70,7 +67,8 @@ python3 assets/data/build_sky.py   # nécessite les sources d3-celestial
 ## Structure
 ```
 despina-aapp/
-├── index.html  solar.html  deepsky.html  messier.html  quiz.html  observe.html  info.html
+├── index.html  solar.html  deepsky.html  messier.html  ngc.html
+├── quiz.html  observe.html  info.html
 ├── manifest.json  sw.js  sitemap.xml  robots.txt
 └── assets/
     ├── css/base.css
